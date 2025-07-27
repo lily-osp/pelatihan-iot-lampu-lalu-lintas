@@ -1,14 +1,26 @@
 // Simple IoT Teaching Platform JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    // Section Navigation
+    // Section Navigation with enhanced functionality
     const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('.section');
+    const sections = document.querySelectorAll('.section, #hero, #overview');
     
-    // Function to show section
+    // Function to show section with smooth transitions
     function showSection(sectionId) {
-        // Hide all sections
+        // Don't block user interactions - remove pointer-events blocking
+        const activeLink = document.querySelector('.nav-link.active');
+        
+        // Hide all sections with smooth transition
         sections.forEach(section => {
-            section.classList.remove('active');
+            if (section.classList.contains('active')) {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.classList.remove('active');
+                    section.style.opacity = '';
+                    section.style.transform = '';
+                }, 300);
+            }
         });
         
         // Remove active class from all nav links
@@ -16,30 +28,213 @@ document.addEventListener('DOMContentLoaded', function() {
             link.classList.remove('active');
         });
         
-        // Show target section
+        // Show target section with smooth animation
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
-            targetSection.classList.add('active');
+            // Small delay to ensure smooth transition
+            setTimeout(() => {
+                targetSection.classList.add('active');
+                
+                // Trigger reflow for smooth animation
+                targetSection.offsetHeight;
+                
+                // Add entrance animation
+                targetSection.style.opacity = '1';
+                targetSection.style.transform = 'translateY(0)';
+            }, 350);
         }
         
-        // Add active class to clicked nav link
-        const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
-        if (activeLink) {
-            activeLink.classList.add('active');
+        // Add active class to clicked nav link with smooth transition
+        const newActiveLink = document.querySelector(`[data-section="${sectionId}"]`);
+        if (newActiveLink) {
+            setTimeout(() => {
+                newActiveLink.classList.add('active');
+            }, 100);
         }
+        
+        // Scroll to top smoothly
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
     
-    // Add click event listeners to nav links
+    // Enhanced click event listeners with better debouncing
+    let isTransitioning = false;
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            
+            if (isTransitioning) return;
+            
             const sectionId = this.getAttribute('data-section');
+            const currentActiveSection = document.querySelector('.section.active, #hero.active, #overview.active');
+            
+            // Don't transition if clicking the same section
+            if (currentActiveSection && currentActiveSection.id === sectionId) {
+                return;
+            }
+            
+            isTransitioning = true;
             showSection(sectionId);
+            
+            // Reset transition flag after animation completes (reduced time for better responsiveness)
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 500);
         });
     });
     
-    // Show overview section by default
-    showSection('overview');
+    // Initialize with hero section by default
+    showSection('hero');
+    
+    // Add keyboard navigation support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            // Return to hero section on Escape
+            showSection('hero');
+        }
+    });
+    
+    // Add smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            
+            const targetId = href.substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement && !this.classList.contains('nav-link')) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Interactive traffic light demo animation
+    function animateTrafficLight() {
+        const lights = document.querySelectorAll('.traffic-light-demo .light');
+        let currentLight = 0;
+        
+        function cycleLight() {
+            // Remove active class from all lights
+            lights.forEach(light => light.classList.remove('active'));
+            
+            // Add active class to current light
+            lights[currentLight].classList.add('active');
+            
+            // Move to next light
+            currentLight = (currentLight + 1) % lights.length;
+        }
+        
+        // Start the animation
+        cycleLight();
+        setInterval(cycleLight, 3000); // Change every 3 seconds for more realistic timing
+    }
+    
+    // Start traffic light animation when hero section is active
+    function startTrafficLightAnimation() {
+        const heroSection = document.getElementById('hero');
+        if (heroSection && heroSection.classList.contains('active')) {
+            animateTrafficLight();
+        }
+    }
+    
+    // Enhanced section switching with visual feedback
+    const originalShowSection = showSection;
+    showSection = function(sectionId) {
+        // Show transition feedback (non-blocking)
+        const transitionFeedback = document.getElementById('transitionFeedback');
+        if (transitionFeedback) {
+            transitionFeedback.classList.add('show');
+        }
+        
+        // Show loading indicator (non-blocking)
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        if (loadingIndicator) {
+            loadingIndicator.classList.add('show');
+        }
+        
+        // Update progress bar
+        updateProgressBar(sectionId);
+        
+        // Update section counter
+        updateSectionCounter(sectionId);
+        
+        // Call original function
+        originalShowSection(sectionId);
+        
+        // Hide feedback elements after transition
+        setTimeout(() => {
+            if (loadingIndicator) {
+                loadingIndicator.classList.remove('show');
+            }
+            if (transitionFeedback) {
+                transitionFeedback.classList.remove('show');
+            }
+            
+            // Start traffic light animation if hero section
+            if (sectionId === 'hero') {
+                startTrafficLightAnimation();
+            }
+        }, 500);
+    };
+    
+    // Function to update progress bar
+    function updateProgressBar(sectionId) {
+        const progressBar = document.getElementById('progressBar');
+        if (!progressBar) return;
+        
+        const sections = ['hero', 'overview', 'iot-fundamentals', 'microcontroller', 'project-details', 'technical', 'wokwi-simulations', 'practical-examples', 'troubleshooting', 'sources'];
+        const currentIndex = sections.indexOf(sectionId);
+        const progress = ((currentIndex + 1) / sections.length) * 100;
+        
+        progressBar.style.width = progress + '%';
+    }
+    
+    // Function to update section counter
+    function updateSectionCounter(sectionId) {
+        const sectionCounter = document.getElementById('sectionCounter');
+        const currentSectionSpan = document.getElementById('currentSection');
+        const totalSectionsSpan = document.getElementById('totalSections');
+        
+        if (!sectionCounter || !currentSectionSpan || !totalSectionsSpan) return;
+        
+        const sectionNames = {
+            'hero': 'Hero',
+            'overview': 'Ringkasan',
+            'iot-fundamentals': 'Dasar IoT',
+            'microcontroller': 'Mikrokontroler',
+            'project-details': 'Proyek',
+            'technical': 'Teknis',
+            'wokwi-simulations': 'Simulasi',
+            'practical-examples': 'Contoh',
+            'troubleshooting': 'Pemecahan',
+            'sources': 'Sumber'
+        };
+        
+        const sections = Object.keys(sectionNames);
+        const currentIndex = sections.indexOf(sectionId);
+        
+        currentSectionSpan.textContent = sectionNames[sectionId] || 'Hero';
+        totalSectionsSpan.textContent = sections.length;
+        
+        // Show section counter
+        sectionCounter.classList.add('show');
+        
+        // Hide after 3 seconds
+        setTimeout(() => {
+            sectionCounter.classList.remove('show');
+        }, 3000);
+    }
+    
+    // Start initial traffic light animation
+    startTrafficLightAnimation();
+    
     // Traffic light logic data with correct implementation from actual Arduino code
     const trafficLogic = {
         twoWay: {

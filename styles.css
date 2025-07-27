@@ -213,18 +213,10 @@ p {
     background: var(--primary-50);
 }
 
-/* Section Visibility */
+/* Section Visibility - Updated for smooth animations */
 .section {
-    display: none;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.section.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
+    /* Base styles for sections - will be overridden by animation system */
+    padding: var(--spacing-16) 0;
 }
 
 /* Navigation Link States */
@@ -251,17 +243,20 @@ p {
 /* --- Hero Section --- */
 .hero-section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-16);
+    grid-template-columns: 70% 30%;
+    gap: var(--spacing-8);
     align-items: center;
     padding: var(--spacing-20) 0;
     min-height: 80vh;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .hero-content {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-6);
+    padding-right: var(--spacing-8);
 }
 
 .hero-badge {
@@ -277,6 +272,21 @@ p {
     width: fit-content;
 }
 
+.hero-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.hero-badge:hover::before {
+    left: 100%;
+}
+
 .hero-title {
     font-size: var(--font-size-5xl);
     font-weight: 800;
@@ -285,18 +295,31 @@ p {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     line-height: 1.1;
+    margin-bottom: var(--spacing-4);
+}
+
+.hero-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+    border-radius: 2px;
 }
 
 .hero-subtitle {
     font-size: var(--font-size-xl);
     color: var(--neutral-600);
     line-height: 1.6;
+    margin-bottom: var(--spacing-6);
 }
 
 .hero-stats {
     display: flex;
     gap: var(--spacing-8);
-    margin-top: var(--spacing-4);
+    margin-bottom: var(--spacing-8);
 }
 
 .stat-item {
@@ -304,6 +327,7 @@ p {
     flex-direction: column;
     align-items: center;
     gap: var(--spacing-1);
+    text-align: center;
 }
 
 .stat-number {
@@ -315,42 +339,80 @@ p {
 .stat-label {
     font-size: var(--font-size-sm);
     color: var(--neutral-500);
-    text-align: center;
+    font-weight: 500;
 }
 
 .hero-actions {
     display: flex;
     gap: var(--spacing-4);
-    margin-top: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .hero-visual {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 400px;
 }
 
 .traffic-light-demo {
-    background: var(--neutral-800);
-    border-radius: var(--radius-2xl);
-    padding: var(--spacing-8);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-4);
+    align-items: center;
+    background: var(--neutral-800);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 150px;
 }
 
 .light {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: var(--neutral-600);
-    transition: var(--transition-normal);
+    background: var(--neutral-400);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.light.red.active { background: var(--error-500); box-shadow: 0 0 20px var(--error-500); }
-.light.yellow { background: var(--warning-500); }
-.light.green { background: var(--success-500); }
+.light.red.active { 
+    background: var(--error-500); 
+    box-shadow: 0 0 20px var(--error-500);
+    transform: scale(1.1);
+}
+
+.light.yellow { 
+    background: var(--warning-500); 
+}
+
+.light.yellow.active {
+    background: var(--warning-500);
+    box-shadow: 0 0 20px var(--warning-500);
+    transform: scale(1.1);
+}
+
+.light.green { 
+    background: var(--success-500); 
+}
+
+.light.green.active {
+    background: var(--success-500);
+    box-shadow: 0 0 20px var(--success-500);
+    transform: scale(1.1);
+}
 
 /* --- Buttons --- */
 .btn {
@@ -1511,4 +1573,459 @@ tr:hover {
 .spec-value {
     color: var(--primary-600);
     font-weight: 600;
+} 
+
+/* --- Section Management & Animations --- */
+.section, #hero, #overview {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.section.active, #hero.active, #overview.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Smooth fade-in animation for sections */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section.active, #hero.active, #overview.active {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Enhanced navigation transitions */
+.nav-link {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+    width: 100%;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--primary-50), var(--success-50));
+    color: var(--primary-700);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Smooth content transitions */
+.card, .simulation-card, .code-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover, .simulation-card:hover, .code-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Enhanced button transitions */
+.pattern-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.pattern-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.pattern-btn:hover::before {
+    left: 100%;
+}
+
+.pattern-btn.active {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Smooth table and chart transitions */
+.table-wrapper, .chart-wrapper {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.table-wrapper:hover, .chart-wrapper:hover {
+    transform: scale(1.02);
+}
+
+/* Enhanced toast animations */
+.custom-toast {
+    transform: translateX(100%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.custom-toast.show {
+    transform: translateX(0);
+}
+
+/* Smooth hero section animations */
+.hero-section {
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-section.active {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.hero-content {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-stats {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-item:hover {
+    transform: scale(1.1);
+}
+
+/* Smooth traffic light demo animations */
+.traffic-light-demo {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light.active {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px currentColor;
+    }
+    50% {
+        box-shadow: 0 0 30px currentColor, 0 0 40px currentColor;
+    }
+}
+
+/* Enhanced mobile responsiveness with smooth transitions */
+@media (max-width: 768px) {
+    .section, #hero, #overview {
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    
+    .nav-menu {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card, .simulation-card, .code-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+} 
+
+/* Enhanced loading and transition feedback */
+.loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-6);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    display: none;
+    align-items: center;
+    gap: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+    pointer-events: none; /* Don't block interactions */
+}
+
+.loading-indicator.show {
+    display: flex;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--neutral-200);
+    border-top: 3px solid var(--primary-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-weight: 500;
+    color: var(--neutral-700);
+}
+
+/* Enhanced section transition effects */
+.section, #hero, #overview {
+    position: relative;
+}
+
+.section::before, #hero::before, #overview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-50), var(--success-50));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.section.active::before, #hero.active::before, #overview.active::before {
+    opacity: 0.1;
+}
+
+/* Ensure navbar stays clickable */
+.navbar {
+    z-index: 1000;
+    pointer-events: auto;
+}
+
+.nav-link {
+    pointer-events: auto;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--primary-50), var(--success-50));
+    color: var(--primary-700);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Transition feedback without blocking */
+.transition-feedback {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.transition-feedback.show {
+    opacity: 1;
+}
+
+/* Smooth content reveal animation */
+.card, .simulation-card, .code-card {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: calc(var(--animation-order, 0) * 0.1s);
+}
+
+/* Enhanced navigation feedback */
+.nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.nav-link:hover::after {
+    left: 100%;
+}
+
+/* Improved button hover effects */
+.btn {
+    position: relative;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+    .loading-indicator {
+        padding: var(--spacing-4);
+        font-size: var(--font-size-sm);
+    }
+    
+    .nav-link {
+        transition: all 0.2s ease;
+        pointer-events: auto;
+    }
+    
+    .section, #hero, #overview {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+} 
+
+/* Progress indicator for current section */
+.progress-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--neutral-200);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+    width: 0%;
+    transition: width 0.6s ease;
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Section counter indicator */
+.section-counter {
+    position: fixed;
+    bottom: var(--spacing-6);
+    right: var(--spacing-6);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--neutral-200);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--neutral-700);
+    z-index: 100;
+    display: none;
+}
+
+.section-counter.show {
+    display: block;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Enhanced navigation with section indicators */
+.nav-link {
+    position: relative;
+}
+
+.nav-link .section-indicator {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: var(--success-500);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nav-link.active .section-indicator {
+    opacity: 1;
+    animation: pulse 2s infinite;
+}
+
+/* Smooth page transitions */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-500), var(--success-500));
+    z-index: 9998;
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-transition.active {
+    transform: translateY(0);
 } 
