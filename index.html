@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materi Lengkap IoT Lampu Lalu Lintas Cerdas - Pembelajaran Komprehensif</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+</head>
+<body>
+    <nav style="background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position:sticky; top:0; z-index:10;">
+        <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.5rem;">
+            <div style="font-weight:700; font-size:1.25rem;">🚦 IoT Lampu Lalu Lintas Cerdas</div>
+            <div style="display:flex; gap:1.5rem;">
+                <a href="#overview" style="color:#374151; text-decoration:none; font-weight:500;">Overview</a>
+                <a href="#iot-fundamentals" style="color:#374151; text-decoration:none; font-weight:500;">IoT Dasar</a>
+                <a href="#microcontroller" style="color:#374151; text-decoration:none; font-weight:500;">Mikrokontroler</a>
+                <a href="#project-details" style="color:#374151; text-decoration:none; font-weight:500;">Proyek</a>
+                <a href="#technical" style="color:#374151; text-decoration:none; font-weight:500;">Teknis</a>
+                <a href="#practical-examples" style="color:#374151; text-decoration:none; font-weight:500;">Praktis</a>
+                <a href="#troubleshooting" style="color:#374151; text-decoration:none; font-weight:500;">Debug</a>
+
+            </div>
+        </div>
+    </nav>
+    
+    <main style="max-width:1200px; margin:2rem auto; padding:0 1.5rem;">
+        <header style="text-align:center; margin-bottom:3rem;">
+            <h1 style="font-size:2.5rem; font-weight:700; margin-bottom:0.5rem;">📚 Materi Pembelajaran IoT</h1>
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:0.5rem; color:#166534;">Sistem Kontrol Lampu Lalu Lintas Cerdas Berbasis ESP32</h2>
+            <p style="color:#6b7280; font-size:1.125rem;">Pembelajaran Komprehensif: IoT, Mikrokontroler, & Proyek Praktis</p>
+        </header>
+        
+        <section id="overview" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🎯 Overview Proyek</h2>
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:1.5rem;">
+                <h3 style="font-size:1.25rem; font-weight:600; margin-bottom:1rem; color:#166534;">Deskripsi Proyek</h3>
+                <p style="font-size:1.1rem; line-height:1.6; margin-bottom:1rem;">Proyek IoT Lampu Lalu Lintas Cerdas adalah implementasi sistem kontrol lalu lintas berbasis ESP32 yang mengintegrasikan hardware, software, dan cloud platform untuk menciptakan solusi monitoring real-time. Sistem ini dirancang untuk pembelajaran komprehensif IoT, mikrokontroler, dan embedded systems dengan fokus pada aplikasi praktis.</p>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:1.5rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Teknologi Utama</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">🔧 ESP32</span> - Mikrokontroler dual-core dengan WiFi & Bluetooth terintegrasi</li>
+                            <li><span class="status-active">☁️ Adafruit IO</span> - Platform IoT cloud untuk monitoring dan kontrol</li>
+                            <li><span class="status-active">📡 MQTT</span> - Protokol komunikasi real-time yang ringan</li>
+                            <li><span class="status-active">⚡ Arduino Framework</span> - Lingkungan pengembangan embedded yang user-friendly</li>
+                            <li><span class="status-active">📚 GitHub</span> - Version control dan kolaborasi tim</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Studi Kasus Implementasi</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-masked">Perempatan Basic (4-way)</span> - 2 Set Lampu: Utara-Selatan & Timur-Barat</li>
+                            <li><span class="status-masked">Perempatan Advanced (4-way)</span> - 4 Set Lampu Individual: Utara, Selatan, Timur, Barat</li>
+                            <li><span class="status-masked">Pertigaan (3-way)</span> - 3 Set Lampu: Jalur Utama & 2 Cabang</li>
+                            <li><span class="status-masked">Jalan Lurus (2-way)</span> - 2 Set Lampu: Arah Berlawanan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="iot-fundamentals" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🌐 Fundamental IoT (Internet of Things)</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Apa itu IoT?</h3>
+                <p style="font-size:1.1rem; line-height:1.6; margin-bottom:1rem;">Internet of Things (IoT) adalah ekosistem perangkat fisik yang tertanam dengan sensor, actuator, software, dan teknologi konektivitas untuk mengumpulkan, mengirim, dan bertukar data dengan perangkat dan sistem lain melalui internet. IoT memungkinkan objek sehari-hari menjadi "cerdas" dan dapat berkomunikasi secara otomatis.</p>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:1.5rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Komponen IoT</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Sensors</span> - Mengumpulkan data dari lingkungan</li>
+                            <li><span class="status-active">Actuators</span> - Melakukan aksi berdasarkan data</li>
+                            <li><span class="status-active">Connectivity</span> - WiFi, Bluetooth, LoRa, dll</li>
+                            <li><span class="status-active">Processing</span> - Mikrokontroler/komputer</li>
+                            <li><span class="status-active">Cloud Platform</span> - Penyimpanan & analisis data</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Protokol Komunikasi</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">MQTT</span> - Lightweight, ideal untuk IoT</li>
+                            <li><span class="status-active">HTTP/HTTPS</span> - Web-based communication</li>
+                            <li><span class="status-active">CoAP</span> - Constrained Application Protocol</li>
+                            <li><span class="status-active">WebSocket</span> - Real-time bidirectional</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Arsitektur IoT</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Lapisan IoT (IoT Layers)</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+                        <div style="background:#fff; border-radius:0.5rem; padding:1rem; text-align:center;">
+                            <h5 style="font-weight:600; color:#166534; margin-bottom:0.5rem;">Layer 1: Perception</h5>
+                            <p style="font-size:0.9rem;">Sensors, actuators, devices</p>
+                        </div>
+                        <div style="background:#fff; border-radius:0.5rem; padding:1rem; text-align:center;">
+                            <h5 style="font-weight:600; color:#166534; margin-bottom:0.5rem;">Layer 2: Network</h5>
+                            <p style="font-size:0.9rem;">Communication protocols</p>
+                        </div>
+                        <div style="background:#fff; border-radius:0.5rem; padding:1rem; text-align:center;">
+                            <h5 style="font-weight:600; color:#166534; margin-bottom:0.5rem;">Layer 3: Application</h5>
+                            <p style="font-size:0.9rem;">User interfaces, analytics</p>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                    
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Aplikasi IoT dalam Kehidupan Sehari-hari</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Smart Home</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li>Smart lighting control</li>
+                            <li>Temperature & humidity monitoring</li>
+                            <li>Security systems</li>
+                            <li>Energy management</li>
+                        </ul>
+                    </div>
+                            <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Smart City</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li>Traffic light optimization</li>
+                            <li>Waste management</li>
+                            <li>Air quality monitoring</li>
+                            <li>Smart parking systems</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+        </section>
+
+        <section id="microcontroller" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🔧 Mikrokontroler & ESP32</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Apa itu Mikrokontroler?</h3>
+                <p style="font-size:1.1rem; line-height:1.6; margin-bottom:1rem;">Mikrokontroler adalah sistem komputer mini yang terintegrasi dalam satu chip (System on Chip - SoC). Berisi CPU, memori (RAM dan ROM), dan berbagai peripheral I/O yang diperlukan untuk mengontrol perangkat elektronik secara real-time. Mikrokontroler dirancang untuk aplikasi embedded yang membutuhkan kontrol langsung terhadap hardware.</p>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:1.5rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Komponen Mikrokontroler</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">CPU</span> - Central Processing Unit</li>
+                            <li><span class="status-active">Memory</span> - RAM & ROM</li>
+                            <li><span class="status-active">I/O Ports</span> - Input/Output interfaces</li>
+                            <li><span class="status-active">Timers</span> - Time-based operations</li>
+                            <li><span class="status-active">ADC/DAC</span> - Analog conversion</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Keunggulan Mikrokontroler</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Low Power</span> - Konsumsi daya minimal</li>
+                            <li><span class="status-active">Real-time</span> - Respons cepat</li>
+                            <li><span class="status-active">Cost-effective</span> - Harga terjangkau</li>
+                            <li><span class="status-active">Reliable</span> - Stabil untuk embedded systems</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">ESP32 - Mikrokontroler IoT</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Spesifikasi ESP32</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Dual-core CPU</span> - 2 CPU cores (240MHz) dengan arsitektur Xtensa LX6</li>
+                            <li><span class="status-active">WiFi & Bluetooth</span> - IEEE 802.11 b/g/n dan Bluetooth 4.2</li>
+                            <li><span class="status-active">34 GPIO pins</span> - Interface I/O yang fleksibel dan programmable</li>
+                            <li><span class="status-active">520KB SRAM</span> - Memory internal untuk data dan stack</li>
+                            <li><span class="status-active">4MB Flash</span> - Penyimpanan program dan data non-volatile</li>
+                            <li><span class="status-active">Security</span> - Hardware encryption dan secure boot</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Peripheral ESP32</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">ADC</span> - 18 channel analog input</li>
+                            <li><span class="status-active">DAC</span> - 2 channel analog output</li>
+                            <li><span class="status-active">UART</span> - Serial communication</li>
+                            <li><span class="status-active">SPI/I2C</span> - Interface sensors</li>
+                            <li><span class="status-active">PWM</span> - Pulse width modulation</li>
+                        </ul>
+                    </div>
+                        </div>
+                    </div>
+                    
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Programming ESP32</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Development Environment</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Arduino IDE</span> - User-friendly interface</li>
+                            <li><span class="status-active">ESP-IDF</span> - Official framework</li>
+                            <li><span class="status-active">PlatformIO</span> - Advanced IDE</li>
+                            <li><span class="status-active">MicroPython</span> - Python programming</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Libraries & Tools</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">WiFi</span> - Network connectivity</li>
+                            <li><span class="status-active">MQTT</span> - IoT communication</li>
+                            <li><span class="status-active">JSON</span> - Data formatting</li>
+                            <li><span class="status-active">HTTP Client</span> - Web requests</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-details" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🚦 Detail Proyek Lampu Lalu Lintas</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Tujuan & Manfaat Proyek</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Tujuan Pembelajaran</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">IoT End-to-End</span> - Memahami arsitektur IoT lengkap</li>
+                            <li><span class="status-active">Embedded Programming</span> - Menguasai programming mikrokontroler</li>
+                            <li><span class="status-active">MQTT Protocol</span> - Implementasi komunikasi real-time</li>
+                            <li><span class="status-active">Hardware Integration</span> - Integrasi sensor dan actuator</li>
+                            <li><span class="status-active">Cloud Platform</span> - Penggunaan platform IoT cloud</li>
+                            <li><span class="status-active">Data Analytics</span> - Analisis dan visualisasi data</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Manfaat Praktis</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Real-time Monitoring</span> - Pantau traffic flow secara live</li>
+                            <li><span class="status-active">Smart Optimization</span> - Optimasi waktu lampu berdasarkan traffic</li>
+                            <li><span class="status-active">Traffic Management</span> - Pengurangan kemacetan dan delay</li>
+                            <li><span class="status-active">Data Analytics</span> - Analisis pola traffic untuk perencanaan</li>
+                            <li><span class="status-active">Remote Control</span> - Kontrol dan maintenance dari jarak jauh</li>
+                            <li><span class="status-active">Energy Efficiency</span> - Optimasi konsumsi energi</li>
+                        </ul>
+                    </div>
+                </div>
+                    </div>
+                    
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Komponen Hardware</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                            <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Komponen Wajib</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">1x ESP32 Dev Kit</span> - Mikrokontroler utama</li>
+                            <li><span class="status-active">12x LED (4x Merah, 4x Kuning, 4x Hijau)</span> - Simulasi lampu</li>
+                            <li><span class="status-active">12x Resistor 220Ω</span> - Current limiting</li>
+                            <li><span class="status-active">1x Breadboard</span> - Prototyping</li>
+                            <li><span class="status-active">Kabel jumper</span> - Koneksi komponen</li>
+                            <li><span class="status-active">USB Cable</span> - Programming & power</li>
+                                </ul>
+                            </div>
+                            <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Komponen Opsional</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-masked">Push button</span> - Manual control</li>
+                            <li><span class="status-masked">Buzzer</span> - Audio feedback</li>
+                            <li><span class="status-masked">LCD Display</span> - Status information</li>
+                            <li><span class="status-masked">Potentiometer</span> - Speed control</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Arsitektur Sistem</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Alur Data Sistem</h4>
+                    <div style="font-family:monospace; font-size:0.9rem; line-height:1.8; background:#fff; border-radius:0.5rem; padding:1rem;">
+                        [LED Traffic Lights] ↔ [ESP32 GPIO] ↔ [WiFi Module] ↔ [Router] ↔ [Internet] ↔ [Adafruit IO MQTT Broker] ↔ [Dashboard Web]
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Hardware Layer</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li>LED sebagai representasi lampu</li>
+                            <li>ESP32 sebagai brain system</li>
+                            <li>WiFi untuk konektivitas</li>
+                            <li>Power supply stabil</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Software Layer</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li>Arduino firmware</li>
+                            <li>MQTT client library</li>
+                            <li>WiFi management</li>
+                            <li>State machine logic</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="technical" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">⚙️ Spesifikasi Teknis & Logika</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Logika Lampu Lalu Lintas Interaktif</h3>
+                <p style="text-align:center; margin-bottom:1.5rem; color:#6b7280;">Sistem menggunakan state machine untuk mengatur urutan lampu lalu lintas. Pilih jenis simpang untuk melihat logika yang berbeda dan durasi setiap state.</p>
+                
+                <div style="text-align:center; margin-bottom:2rem;">
+                    <button type="button" id="btnPerempatan" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#166534; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Simpang Empat</button>
+                    <button type="button" id="btnPertigaan" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#737373; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Simpang Tiga</button>
+                </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-bottom:2rem;">
+                    <div>
+                        <h4 style="font-size:1.125rem; font-weight:600; margin-bottom:1rem; text-align:center;">Tabel State Machine</h4>
+                        <div style="overflow-x:auto;">
+                            <table id="logicTable">
+                                <thead></thead>
+                                <tbody class="divide-y"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="font-size:1.125rem; font-weight:600; margin-bottom:1rem; text-align:center;">Grafik Durasi State</h4>
+                        <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; height:350px;">
+                            <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Implementasi MQTT & Cloud</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">MQTT Topics Structure</h4>
+                        <div style="background:#f9fafb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem;">
+                            <div>📡 traffic-light/status - Status real-time lampu</div>
+                            <div>📡 traffic-light/control - Kontrol manual sistem</div>
+                            <div>📡 traffic-light/data - Data JSON lengkap</div>
+                            <div>📡 traffic-light/error - Notifikasi error</div>
+                            <div>📡 traffic-light/uptime - Waktu operasi sistem</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">JSON Data Format</h4>
+                        <div style="background:#f9fafb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem;">
+                            <div>{</div>
+                            <div>&nbsp;&nbsp;"timestamp": "2024-01-15T10:30:00Z",</div>
+                            <div>&nbsp;&nbsp;"state": 1,</div>
+                            <div>&nbsp;&nbsp;"duration": 25,</div>
+                            <div>&nbsp;&nbsp;"direction": "utara_selatan",</div>
+                            <div>&nbsp;&nbsp;"status": "hijau",</div>
+                            <div>&nbsp;&nbsp;"uptime": 3600</div>
+                            <div>}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Dashboard & Monitoring</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Adafruit IO Dashboard</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Real-time status</span> - Current traffic light state</li>
+                            <li><span class="status-active">Historical data</span> - Traffic patterns over time</li>
+                            <li><span class="status-active">Control buttons</span> - Manual override capability</li>
+                            <li><span class="status-active">Alert system</span> - Error notifications</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Analytics & Insights</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Peak hours</span> - Traffic flow analysis</li>
+                            <li><span class="status-active">Efficiency metrics</span> - Wait time optimization</li>
+                            <li><span class="status-active">System health</span> - Uptime monitoring</li>
+                            <li><span class="status-active">Predictive maintenance</span> - Proactive alerts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+
+        
+        <section id="practical-examples" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🔧 Contoh Praktis & Implementasi</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Kode Arduino Dasar</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Blink Test - Verifikasi Hardware</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>// Blink test untuk verifikasi koneksi LED</div>
+                        <div>const int LED_PIN = 23;</div>
+                        <div></div>
+                        <div>void setup() {</div>
+                        <div>&nbsp;&nbsp;pinMode(LED_PIN, OUTPUT);</div>
+                        <div>}</div>
+                        <div></div>
+                        <div>void loop() {</div>
+                        <div>&nbsp;&nbsp;digitalWrite(LED_PIN, HIGH);</div>
+                        <div>&nbsp;&nbsp;delay(1000);</div>
+                        <div>&nbsp;&nbsp;digitalWrite(LED_PIN, LOW);</div>
+                        <div>&nbsp;&nbsp;delay(1000);</div>
+                        <div>}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">WiFi Connection Test</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Verifikasi Konektivitas WiFi</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>#include &lt;WiFi.h&gt;</div>
+                        <div></div>
+                        <div>const char* ssid = "YOUR_WIFI_SSID";</div>
+                        <div>const char* password = "YOUR_WIFI_PASSWORD";</div>
+                        <div></div>
+                        <div>void setup() {</div>
+                        <div>&nbsp;&nbsp;Serial.begin(115200);</div>
+                        <div>&nbsp;&nbsp;WiFi.begin(ssid, password);</div>
+                        <div>&nbsp;&nbsp;while (WiFi.status() != WL_CONNECTED) {</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;delay(500);</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Serial.print(".");</div>
+                        <div>&nbsp;&nbsp;}</div>
+                        <div>&nbsp;&nbsp;Serial.println("WiFi Connected!");</div>
+                        <div>}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">MQTT Basic Test</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Verifikasi Koneksi MQTT</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>#include &lt;Adafruit_MQTT.h&gt;</div>
+                        <div>#include &lt;Adafruit_MQTT_Client.h&gt;</div>
+                        <div></div>
+                        <div>#define AIO_SERVER "io.adafruit.com"</div>
+                        <div>#define AIO_USERNAME "YOUR_USERNAME"</div>
+                        <div>#define AIO_KEY "YOUR_KEY"</div>
+                        <div></div>
+                        <div>WiFiClient client;</div>
+                        <div>Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, 1883, AIO_USERNAME, AIO_KEY);</div>
+                        <div>Adafruit_MQTT_Publish testFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/test");</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="troubleshooting" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🔍 Troubleshooting & Debugging</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Masalah Umum & Solusi</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Hardware Issues</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-failed">LED tidak menyala</span> - Cek resistor dan koneksi</li>
+                            <li><span class="status-failed">ESP32 tidak terdeteksi</span> - Cek driver USB dan kabel</li>
+                            <li><span class="status-failed">Upload gagal</span> - Tekan BOOT button saat upload</li>
+                            <li><span class="status-failed">Pin tidak merespons</span> - Hindari pin boot (GPIO 0, 2)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Software Issues</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-failed">WiFi tidak connect</span> - Cek SSID dan password</li>
+                            <li><span class="status-failed">MQTT timeout</span> - Cek kredensial Adafruit IO</li>
+                            <li><span class="status-failed">Memory error</span> - Optimasi penggunaan RAM</li>
+                            <li><span class="status-failed">Watchdog reset</span> - Tambahkan delay() di loop</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Debugging Tools</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Serial Monitor</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Baud rate: 115200</span></li>
+                            <li><span class="status-active">Debug messages</span></li>
+                            <li><span class="status-active">Variable monitoring</span></li>
+                            <li><span class="status-active">Error reporting</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Testing Methods</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Unit testing</span> - Test fungsi individual</li>
+                            <li><span class="status-active">Integration testing</span> - Test sistem lengkap</li>
+                            <li><span class="status-active">Stress testing</span> - Test performa</li>
+                            <li><span class="status-active">User acceptance</span> - Test user experience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced-concepts" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🚀 Konsep Lanjutan</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Optimasi Performa</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Memory Management</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Dynamic allocation</span> - Hindari di embedded systems</li>
+                            <li><span class="status-active">Stack vs Heap</span> - Pilih sesuai kebutuhan</li>
+                            <li><span class="status-active">Buffer management</span> - Cegah overflow</li>
+                            <li><span class="status-active">Garbage collection</span> - Tidak tersedia di Arduino</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Power Management</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Deep sleep mode</span> - Hemat baterai</li>
+                            <li><span class="status-active">CPU frequency</span> - Sesuaikan kebutuhan</li>
+                            <li><span class="status-active">WiFi power saving</span> - Optimasi koneksi</li>
+                            <li><span class="status-active">Peripheral control</span> - Matikan yang tidak perlu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Security & Best Practices</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Security Measures</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">SSL/TLS encryption</span> - Secure communication</li>
+                            <li><span class="status-active">Credential management</span> - Jangan hardcode</li>
+                            <li><span class="status-active">Input validation</span> - Cegah injection</li>
+                            <li><span class="status-active">OTA updates</span> - Secure firmware updates</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Code Quality</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Modular design</span> - Reusable components</li>
+                            <li><span class="status-active">Error handling</span> - Robust error management</li>
+                            <li><span class="status-active">Documentation</span> - Clear code comments</li>
+                            <li><span class="status-active">Version control</span> - Track changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="sources" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">📚 Sumber & Referensi</h2>
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.25rem; font-weight:600; margin-bottom:1rem; color:#166534;">🔗 Link Resmi & Dokumentasi</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">🛠️ Hardware & Development</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">ESP32 Official Documentation</a></li>
+                            <li><a href="https://www.arduino.cc/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Arduino Official Website</a></li>
+                            <li><a href="https://www.arduino.cc/reference/en/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Arduino Language Reference</a></li>
+                            <li><a href="https://randomnerdtutorials.com/esp32-tutorials/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">ESP32 Tutorials</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">☁️ Cloud & IoT Platforms</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><a href="https://io.adafruit.com/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Adafruit IO Platform</a></li>
+                            <li><a href="https://learn.adafruit.com/adafruit-io" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Adafruit IO Tutorials</a></li>
+                            <li><a href="https://mqtt.org/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">MQTT Protocol Documentation</a></li>
+                            <li><a href="https://www.hivemq.com/mqtt-essentials/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">MQTT Essentials</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top:2rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">📖 Learning Resources</h4>
+                    <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                        <li><a href="https://github.com/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">GitHub - Version Control & Collaboration</a></li>
+                        <li><a href="https://www.instructables.com/c/technology/arduino/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Instructables - Arduino Projects</a></li>
+                        <li><a href="https://www.hackster.io/" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Hackster.io - IoT Projects</a></li>
+                        <li><a href="https://www.element14.com/community/community/arduino" target="_blank" style="color:#1d4ed8; text-decoration:underline;">Element14 - Arduino Community</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="practical-examples" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🔧 Contoh Praktis & Implementasi</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Kode Arduino Dasar</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Blink Test - Verifikasi Hardware</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>// Blink test untuk verifikasi koneksi LED</div>
+                        <div>const int LED_PIN = 23;</div>
+                        <div></div>
+                        <div>void setup() {</div>
+                        <div>&nbsp;&nbsp;pinMode(LED_PIN, OUTPUT);</div>
+                        <div>}</div>
+                        <div></div>
+                        <div>void loop() {</div>
+                        <div>&nbsp;&nbsp;digitalWrite(LED_PIN, HIGH);</div>
+                        <div>&nbsp;&nbsp;delay(1000);</div>
+                        <div>&nbsp;&nbsp;digitalWrite(LED_PIN, LOW);</div>
+                        <div>&nbsp;&nbsp;delay(1000);</div>
+                        <div>}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">WiFi Connection Test</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-bottom:1rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Verifikasi Konektivitas WiFi</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>#include &lt;WiFi.h&gt;</div>
+                        <div></div>
+                        <div>const char* ssid = "YOUR_WIFI_SSID";</div>
+                        <div>const char* password = "YOUR_WIFI_PASSWORD";</div>
+                        <div></div>
+                        <div>void setup() {</div>
+                        <div>&nbsp;&nbsp;Serial.begin(115200);</div>
+                        <div>&nbsp;&nbsp;WiFi.begin(ssid, password);</div>
+                        <div>&nbsp;&nbsp;while (WiFi.status() != WL_CONNECTED) {</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;delay(500);</div>
+                        <div>&nbsp;&nbsp;&nbsp;&nbsp;Serial.print(".");</div>
+                        <div>&nbsp;&nbsp;}</div>
+                        <div>&nbsp;&nbsp;Serial.println("WiFi Connected!");</div>
+                        <div>}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">MQTT Basic Test</h3>
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem;">
+                    <h4 style="font-weight:600; margin-bottom:1rem; color:#166534;">Verifikasi Koneksi MQTT</h4>
+                    <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; font-family:monospace; font-size:0.9rem; overflow-x:auto;">
+                        <div>#include &lt;Adafruit_MQTT.h&gt;</div>
+                        <div>#include &lt;Adafruit_MQTT_Client.h&gt;</div>
+                        <div></div>
+                        <div>#define AIO_SERVER "io.adafruit.com"</div>
+                        <div>#define AIO_USERNAME "YOUR_USERNAME"</div>
+                        <div>#define AIO_KEY "YOUR_KEY"</div>
+                        <div></div>
+                        <div>WiFiClient client;</div>
+                        <div>Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, 1883, AIO_USERNAME, AIO_KEY);</div>
+                        <div>Adafruit_MQTT_Publish testFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/test");</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="troubleshooting" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🔍 Troubleshooting & Debugging</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Masalah Umum & Solusi</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Hardware Issues</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-failed">LED tidak menyala</span> - Cek resistor dan koneksi</li>
+                            <li><span class="status-failed">ESP32 tidak terdeteksi</span> - Cek driver USB dan kabel</li>
+                            <li><span class="status-failed">Upload gagal</span> - Tekan BOOT button saat upload</li>
+                            <li><span class="status-failed">Pin tidak merespons</span> - Hindari pin boot (GPIO 0, 2)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Software Issues</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-failed">WiFi tidak connect</span> - Cek SSID dan password</li>
+                            <li><span class="status-failed">MQTT timeout</span> - Cek kredensial Adafruit IO</li>
+                            <li><span class="status-failed">Memory error</span> - Optimasi penggunaan RAM</li>
+                            <li><span class="status-failed">Watchdog reset</span> - Tambahkan delay() di loop</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Debugging Tools</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Serial Monitor</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Baud rate: 115200</span></li>
+                            <li><span class="status-active">Debug messages</span></li>
+                            <li><span class="status-active">Variable monitoring</span></li>
+                            <li><span class="status-active">Error reporting</span></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Testing Methods</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Unit testing</span> - Test fungsi individual</li>
+                            <li><span class="status-active">Integration testing</span> - Test sistem lengkap</li>
+                            <li><span class="status-active">Stress testing</span> - Test performa</li>
+                            <li><span class="status-active">User acceptance</span> - Test user experience</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced-concepts" style="margin-bottom:3rem;">
+            <h2 style="font-size:1.75rem; font-weight:600; margin-bottom:1.5rem;">🚀 Konsep Lanjutan</h2>
+            
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Optimasi Performa</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Memory Management</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Dynamic allocation</span> - Hindari di embedded systems</li>
+                            <li><span class="status-active">Stack vs Heap</span> - Pilih sesuai kebutuhan</li>
+                            <li><span class="status-active">Buffer management</span> - Cegah overflow</li>
+                            <li><span class="status-active">Garbage collection</span> - Tidak tersedia di Arduino</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Power Management</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Deep sleep mode</span> - Hemat baterai</li>
+                            <li><span class="status-active">CPU frequency</span> - Sesuaikan kebutuhan</li>
+                            <li><span class="status-active">WiFi power saving</span> - Optimasi koneksi</li>
+                            <li><span class="status-active">Peripheral control</span> - Matikan yang tidak perlu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem;">
+                <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Security & Best Practices</h3>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem;">
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Security Measures</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">SSL/TLS encryption</span> - Secure communication</li>
+                            <li><span class="status-active">Credential management</span> - Jangan hardcode</li>
+                            <li><span class="status-active">Input validation</span> - Cegah injection</li>
+                            <li><span class="status-active">OTA updates</span> - Secure firmware updates</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:600; margin-bottom:0.5rem; color:#166534;">Code Quality</h4>
+                        <ul style="margin:0 0 0 1.25rem; color:#374151;">
+                            <li><span class="status-active">Modular design</span> - Reusable components</li>
+                            <li><span class="status-active">Error handling</span> - Robust error management</li>
+                            <li><span class="status-active">Documentation</span> - Clear code comments</li>
+                            <li><span class="status-active">Version control</span> - Track changes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer style="text-align:center; color:#737373; font-size:0.95rem; margin:2rem 0 1rem;">&copy; 2024 IoT Lampu Lalu Lintas Cerdas. Materi pembelajaran komprehensif untuk proyek IoT.</footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
