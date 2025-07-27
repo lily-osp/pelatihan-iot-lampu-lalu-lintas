@@ -238,18 +238,59 @@ p {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--spacing-6);
+    padding-top: var(--spacing-8);
+    min-height: 100vh;
+    position: relative;
+}
+
+/* When hero is active, adjust main content padding */
+.main-content:has(.hero-section.active) {
+    padding-top: 0;
 }
 
 /* --- Hero Section --- */
 .hero-section {
-    display: grid;
-    grid-template-columns: 70% 30%;
+    display: grid !important;
+    grid-template-columns: 70% 30% !important;
     gap: var(--spacing-8);
     align-items: center;
     padding: var(--spacing-20) 0;
     min-height: 80vh;
     max-width: 1200px;
     margin: 0 auto;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Debug: Force layout */
+    flex-direction: unset !important;
+    flex-wrap: unset !important;
+}
+
+/* When hero is not active, completely hide it */
+.hero-section:not(.active) {
+    display: none !important;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    transform: scale(0);
+    position: absolute;
+    z-index: -1;
+}
+
+/* Ensure other sections are properly positioned when hero is not active */
+.section:not(.hero-section) {
+    padding: var(--spacing-16) 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* When hero is active, other sections can have more spacing */
+.hero-section.active ~ .section {
+    padding: var(--spacing-20) 0;
+}
+
+/* When hero is hidden, first section should have proper top spacing */
+.section:not(.hero-section):first-of-type {
+    padding-top: var(--spacing-20);
 }
 
 .hero-content {
@@ -257,6 +298,7 @@ p {
     flex-direction: column;
     gap: var(--spacing-6);
     padding-right: var(--spacing-8);
+    width: 100%;
 }
 
 .hero-badge {
@@ -365,6 +407,8 @@ p {
     align-items: center;
     width: 100%;
     height: 400px;
+    /* Ensure it takes full width of its grid column */
+    min-width: 0;
 }
 
 .traffic-light-demo {
@@ -1094,64 +1138,7 @@ p {
 .text-center { text-align: center; }
 .text-content { line-height: 1.7; color: var(--neutral-700); }
 
-/* --- Responsive Design --- */
-@media (max-width: 768px) {
-    .hero-section {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: var(--spacing-8);
-        padding: var(--spacing-12) 0;
-    }
-    
-    .hero-title {
-        font-size: var(--font-size-4xl);
-    }
-    
-    .hero-stats {
-        justify-content: center;
-    }
-    
-    .nav-menu {
-        gap: var(--spacing-1);
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-    
-    .nav-link {
-        min-width: 50px;
-        padding: var(--spacing-1) var(--spacing-2);
-    }
-    
-    .nav-icon {
-        font-size: var(--font-size-base);
-    }
-    
-    .nav-text {
-        font-size: 0.625rem;
-    }
-    
-    .card-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .logic-display {
-        grid-template-columns: 1fr;
-    }
-    
-    .info-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .pattern-selector {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .pattern-btn {
-        width: 100%;
-        max-width: 300px;
-    }
-}
+/* --- Animations --- */
 
 /* --- Animations --- */
 @keyframes fadeInUp {
@@ -1693,10 +1680,6 @@ tr:hover {
 }
 
 /* Smooth hero section animations */
-.hero-section {
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
 .hero-section.active {
     animation: fadeInUp 0.8s ease-out;
 }
@@ -1739,63 +1722,7 @@ tr:hover {
     }
 }
 
-/* Enhanced mobile responsiveness with smooth transitions */
-@media (max-width: 768px) {
-    .section, #hero, #overview {
-        transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    
-    .nav-menu {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .card, .simulation-card, .code-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-} 
 
-/* Enhanced loading and transition feedback */
-.loading-indicator {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    padding: var(--spacing-6);
-    border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-xl);
-    display: none;
-    align-items: center;
-    gap: var(--spacing-4);
-    border: 1px solid var(--neutral-200);
-    pointer-events: none; /* Don't block interactions */
-}
-
-.loading-indicator.show {
-    display: flex;
-    animation: fadeInUp 0.3s ease-out;
-}
-
-.loading-spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid var(--neutral-200);
-    border-top: 3px solid var(--primary-500);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.loading-text {
-    font-weight: 500;
-    color: var(--neutral-700);
-}
 
 /* Enhanced section transition effects */
 .section, #hero, #overview {
@@ -1915,23 +1842,6 @@ tr:hover {
     height: 300px;
 }
 
-/* Enhanced mobile responsiveness */
-@media (max-width: 768px) {
-    .loading-indicator {
-        padding: var(--spacing-4);
-        font-size: var(--font-size-sm);
-    }
-    
-    .nav-link {
-        transition: all 0.2s ease;
-        pointer-events: auto;
-    }
-    
-    .section, #hero, #overview {
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-} 
-
 /* Progress indicator for current section */
 .progress-indicator {
     position: fixed;
@@ -2029,3 +1939,57 @@ tr:hover {
 .page-transition.active {
     transform: translateY(0);
 } 
+
+/* --- Mobile Error Message --- */
+.mobile-error {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-600), var(--success-600));
+    color: white;
+    z-index: 10000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--spacing-8);
+}
+
+.mobile-error.show {
+    display: flex;
+}
+
+.mobile-error h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-4);
+    color: white;
+}
+
+.mobile-error p {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-6);
+    opacity: 0.9;
+}
+
+.mobile-error .icon {
+    font-size: var(--font-size-6xl);
+    margin-bottom: var(--spacing-4);
+}
+
+/* Mobile detection - show error on screens smaller than 768px */
+@media (max-width: 768px) {
+    .mobile-error {
+        display: flex;
+    }
+    
+    /* Hide all content on mobile */
+    .navbar,
+    .main-content,
+    .hero-section,
+    .section {
+        display: none !important;
+    }
+} /* CSS Updated: Mon Jul 28 05:18:32 AM WIB 2025 */

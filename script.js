@@ -153,11 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             transitionFeedback.classList.add('show');
         }
         
-        // Show loading indicator (non-blocking)
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        if (loadingIndicator) {
-            loadingIndicator.classList.add('show');
-        }
+
         
         // Update progress bar
         updateProgressBar(sectionId);
@@ -170,9 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Hide feedback elements after transition
         setTimeout(() => {
-            if (loadingIndicator) {
-                loadingIndicator.classList.remove('show');
-            }
             if (transitionFeedback) {
                 transitionFeedback.classList.remove('show');
             }
