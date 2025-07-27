@@ -1,5 +1,45 @@
 // Simple IoT Teaching Platform JavaScript
 document.addEventListener('DOMContentLoaded', function() {
+    // Section Navigation
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.section');
+    
+    // Function to show section
+    function showSection(sectionId) {
+        // Hide all sections
+        sections.forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Remove active class from all nav links
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Show target section
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        
+        // Add active class to clicked nav link
+        const activeLink = document.querySelector(`[data-section="${sectionId}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+    }
+    
+    // Add click event listeners to nav links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = this.getAttribute('data-section');
+            showSection(sectionId);
+        });
+    });
+    
+    // Show overview section by default
+    showSection('overview');
     // Traffic light logic data with correct implementation from actual Arduino code
     const trafficLogic = {
         twoWay: {
@@ -232,18 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize everything
     updateTrafficLogic('twoWay');
-
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('nav a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
-    });
 
     // Show a demo toast on load
     setTimeout(() => showToast('success', 'Selamat datang di platform IoT Lampu Lalu Lintas!'), 500);

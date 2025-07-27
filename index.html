@@ -20,16 +20,44 @@
                     <p>Sistem Kontrol Cerdas</p>
                 </div>
             </div>
-            <div class="nav-menu">
-                <a href="#overview" class="nav-link">Ringkasan</a>
-                <a href="#iot-fundamentals" class="nav-link">Dasar IoT</a>
-                <a href="#microcontroller" class="nav-link">Mikrokontroler</a>
-                <a href="#project-details" class="nav-link">Proyek</a>
-                <a href="#technical" class="nav-link">Teknis</a>
-                <a href="#wokwi-simulations" class="nav-link">Simulasi</a>
-                <a href="#practical-examples" class="nav-link">Contoh</a>
-                <a href="#troubleshooting" class="nav-link">Pemecahan Masalah</a>
-            </div>
+                                <div class="nav-menu">
+                        <a href="#overview" class="nav-link active" data-section="overview">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">Ringkasan</span>
+                        </a>
+                        <a href="#iot-fundamentals" class="nav-link" data-section="iot-fundamentals">
+                            <span class="nav-icon">🌐</span>
+                            <span class="nav-text">Dasar IoT</span>
+                        </a>
+                        <a href="#microcontroller" class="nav-link" data-section="microcontroller">
+                            <span class="nav-icon">🔧</span>
+                            <span class="nav-text">Mikrokontroler</span>
+                        </a>
+                        <a href="#project-details" class="nav-link" data-section="project-details">
+                            <span class="nav-icon">📋</span>
+                            <span class="nav-text">Proyek</span>
+                        </a>
+                        <a href="#technical" class="nav-link" data-section="technical">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-text">Teknis</span>
+                        </a>
+                        <a href="#wokwi-simulations" class="nav-link" data-section="wokwi-simulations">
+                            <span class="nav-icon">🎮</span>
+                            <span class="nav-text">Simulasi</span>
+                        </a>
+                        <a href="#practical-examples" class="nav-link" data-section="practical-examples">
+                            <span class="nav-icon">🔧</span>
+                            <span class="nav-text">Contoh</span>
+                        </a>
+                        <a href="#troubleshooting" class="nav-link" data-section="troubleshooting">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Pemecahan</span>
+                        </a>
+                        <a href="#sources" class="nav-link" data-section="sources">
+                            <span class="nav-icon">📚</span>
+                            <span class="nav-text">Sumber</span>
+                        </a>
+                    </div>
         </div>
     </nav>
     
@@ -73,8 +101,8 @@
             </div>
         </section>
         
-        <!-- Overview Section -->
-        <section id="overview" class="section">
+                            <!-- Overview Section -->
+                    <section id="overview" class="section active">
             <div class="section-header">
                 <h2 class="section-title">🎯 Ringkasan Proyek</h2>
                 <p class="section-subtitle">Sistem kontrol lalu lintas IoT canggih dengan mikrokontroler ESP32 dan monitoring cloud</p>
@@ -1093,10 +1121,56 @@ void setup() {
                     </ul>
                 </div>
             </div>
-        </section>
-    </main>
-    
-    <footer class="footer">
+                             </section>
+                     
+                     <!-- Sources Section -->
+                     <section id="sources" class="section">
+                         <div class="section-header">
+                             <h2 class="section-title">📚 Sumber & Referensi</h2>
+                             <p class="section-subtitle">Dokumentasi resmi dan materi pembelajaran</p>
+                         </div>
+                         
+                         <div class="resources-grid">
+                             <div class="resource-card">
+                                 <h3>🛠️ Hardware & Pengembangan</h3>
+                                 <ul class="resource-list">
+                                     <li><a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32/" target="_blank">Dokumentasi Resmi ESP32</a></li>
+                                     <li><a href="https://www.arduino.cc/" target="_blank">Website Resmi Arduino</a></li>
+                                     <li><a href="https://www.arduino.cc/reference/en/" target="_blank">Referensi Bahasa Arduino</a></li>
+                                 </ul>
+                             </div>
+                             
+                             <div class="resource-card">
+                                 <h3>☁️ Platform Cloud & IoT</h3>
+                                 <ul class="resource-list">
+                                     <li><a href="https://io.adafruit.com/" target="_blank">Platform Adafruit IO</a></li>
+                                     <li><a href="https://learn.adafruit.com/adafruit-io" target="_blank">Tutorial Adafruit IO</a></li>
+                                     <li><a href="https://mqtt.org/" target="_blank">Dokumentasi Protokol MQTT</a></li>
+                                 </ul>
+                             </div>
+                             
+                             <div class="resource-card">
+                                 <h3>🎓 Pembelajaran & Tutorial</h3>
+                                 <ul class="resource-list">
+                                     <li><a href="https://wokwi.com/" target="_blank">Wokwi - Simulator Arduino Online</a></li>
+                                     <li><a href="https://randomnerdtutorials.com/" target="_blank">Random Nerd Tutorials</a></li>
+                                     <li><a href="https://www.instructables.com/" target="_blank">Instructables - DIY Projects</a></li>
+                                 </ul>
+                             </div>
+                             
+                             <div class="resource-card">
+                                 <h3>📖 Dokumentasi & Referensi</h3>
+                                 <ul class="resource-list">
+                                     <li><a href="https://github.com/espressif/arduino-esp32" target="_blank">ESP32 Arduino Core</a></li>
+                                     <li><a href="https://www.arduino.cc/en/software" target="_blank">Arduino IDE Download</a></li>
+                                     <li><a href="https://platformio.org/" target="_blank">PlatformIO IDE</a></li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </section>
+                 </main>
+                 
+                 <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2025 Sistem IoT Lampu Lalu Lintas Cerdas. Platform pembelajaran komprehensif untuk proyek IoT.</p>
         </div>
