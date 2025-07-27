@@ -114,7 +114,22 @@ void loop() {
   
   delay(1000);
   
-  Serial.println("=== Test 3: Simulasi Lampu Lalu Lintas ===");
+  Serial.println("=== Test 3: Animasi Warna ===");
+  colorAnimation();
+  
+  delay(1000);
+  
+  Serial.println("=== Test 4: Animasi Wave ===");
+  waveAnimation();
+  
+  delay(1000);
+  
+  Serial.println("=== Test 5: Animasi Chase ===");
+  chaseAnimation();
+  
+  delay(1000);
+  
+  Serial.println("=== Test 6: Simulasi Lampu Lalu Lintas ===");
   simulateTrafficLight();
   
   delay(2000);
@@ -232,4 +247,139 @@ void turnOffAllLights() {
   for (int i = 0; i < numLEDs; i++) {
     digitalWrite(allLEDs[i], LOW);
   }
-} 
+}
+
+// ===== ANIMASI BARU =====
+
+void colorAnimation() {
+  Serial.println("Animasi: Semua LED Merah");
+  turnOffAllLights();
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_MERAH_UTARA || allLEDs[i] == PIN_LED_MERAH_SELATAN || 
+        allLEDs[i] == PIN_LED_MERAH_TIMUR || allLEDs[i] == PIN_LED_MERAH_BARAT ||
+        allLEDs[i] == PIN_LED_MERAH_UTAMA || allLEDs[i] == PIN_LED_MERAH_CABANG1 || 
+        allLEDs[i] == PIN_LED_MERAH_CABANG2 || allLEDs[i] == PIN_LED_MERAH_ARAH1 || 
+        allLEDs[i] == PIN_LED_MERAH_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+    }
+  }
+  delay(2000);
+  
+  Serial.println("Animasi: Semua LED Kuning");
+  turnOffAllLights();
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_KUNING_UTARA || allLEDs[i] == PIN_LED_KUNING_SELATAN || 
+        allLEDs[i] == PIN_LED_KUNING_TIMUR || allLEDs[i] == PIN_LED_KUNING_BARAT ||
+        allLEDs[i] == PIN_LED_KUNING_UTAMA || allLEDs[i] == PIN_LED_KUNING_CABANG1 || 
+        allLEDs[i] == PIN_LED_KUNING_CABANG2 || allLEDs[i] == PIN_LED_KUNING_ARAH1 || 
+        allLEDs[i] == PIN_LED_KUNING_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+    }
+  }
+  delay(2000);
+  
+  Serial.println("Animasi: Semua LED Hijau");
+  turnOffAllLights();
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_HIJAU_UTARA || allLEDs[i] == PIN_LED_HIJAU_SELATAN || 
+        allLEDs[i] == PIN_LED_HIJAU_TIMUR || allLEDs[i] == PIN_LED_HIJAU_BARAT ||
+        allLEDs[i] == PIN_LED_HIJAU_UTAMA || allLEDs[i] == PIN_LED_HIJAU_CABANG1 || 
+        allLEDs[i] == PIN_LED_HIJAU_CABANG2 || allLEDs[i] == PIN_LED_HIJAU_ARAH1 || 
+        allLEDs[i] == PIN_LED_HIJAU_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+    }
+  }
+  delay(2000);
+  
+  turnOffAllLights();
+}
+
+void waveAnimation() {
+  Serial.println("Animasi Wave: Merah -> Kuning -> Hijau");
+  
+  // Wave Merah
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_MERAH_UTARA || allLEDs[i] == PIN_LED_MERAH_SELATAN || 
+        allLEDs[i] == PIN_LED_MERAH_TIMUR || allLEDs[i] == PIN_LED_MERAH_BARAT ||
+        allLEDs[i] == PIN_LED_MERAH_UTAMA || allLEDs[i] == PIN_LED_MERAH_CABANG1 || 
+        allLEDs[i] == PIN_LED_MERAH_CABANG2 || allLEDs[i] == PIN_LED_MERAH_ARAH1 || 
+        allLEDs[i] == PIN_LED_MERAH_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(100);
+    }
+  }
+  delay(500);
+  
+  // Wave Kuning
+  turnOffAllLights();
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_KUNING_UTARA || allLEDs[i] == PIN_LED_KUNING_SELATAN || 
+        allLEDs[i] == PIN_LED_KUNING_TIMUR || allLEDs[i] == PIN_LED_KUNING_BARAT ||
+        allLEDs[i] == PIN_LED_KUNING_UTAMA || allLEDs[i] == PIN_LED_KUNING_CABANG1 || 
+        allLEDs[i] == PIN_LED_KUNING_CABANG2 || allLEDs[i] == PIN_LED_KUNING_ARAH1 || 
+        allLEDs[i] == PIN_LED_KUNING_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(100);
+    }
+  }
+  delay(500);
+  
+  // Wave Hijau
+  turnOffAllLights();
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_HIJAU_UTARA || allLEDs[i] == PIN_LED_HIJAU_SELATAN || 
+        allLEDs[i] == PIN_LED_HIJAU_TIMUR || allLEDs[i] == PIN_LED_HIJAU_BARAT ||
+        allLEDs[i] == PIN_LED_HIJAU_UTAMA || allLEDs[i] == PIN_LED_HIJAU_CABANG1 || 
+        allLEDs[i] == PIN_LED_HIJAU_CABANG2 || allLEDs[i] == PIN_LED_HIJAU_ARAH1 || 
+        allLEDs[i] == PIN_LED_HIJAU_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(100);
+    }
+  }
+  delay(500);
+  
+  turnOffAllLights();
+}
+
+void chaseAnimation() {
+  Serial.println("Animasi Chase: LED bergerak berurutan");
+  
+  // Chase Merah
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_MERAH_UTARA || allLEDs[i] == PIN_LED_MERAH_SELATAN || 
+        allLEDs[i] == PIN_LED_MERAH_TIMUR || allLEDs[i] == PIN_LED_MERAH_BARAT ||
+        allLEDs[i] == PIN_LED_MERAH_UTAMA || allLEDs[i] == PIN_LED_MERAH_CABANG1 || 
+        allLEDs[i] == PIN_LED_MERAH_CABANG2 || allLEDs[i] == PIN_LED_MERAH_ARAH1 || 
+        allLEDs[i] == PIN_LED_MERAH_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(200);
+      digitalWrite(allLEDs[i], LOW);
+    }
+  }
+  
+  // Chase Kuning
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_KUNING_UTARA || allLEDs[i] == PIN_LED_KUNING_SELATAN || 
+        allLEDs[i] == PIN_LED_KUNING_TIMUR || allLEDs[i] == PIN_LED_KUNING_BARAT ||
+        allLEDs[i] == PIN_LED_KUNING_UTAMA || allLEDs[i] == PIN_LED_KUNING_CABANG1 || 
+        allLEDs[i] == PIN_LED_KUNING_CABANG2 || allLEDs[i] == PIN_LED_KUNING_ARAH1 || 
+        allLEDs[i] == PIN_LED_KUNING_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(200);
+      digitalWrite(allLEDs[i], LOW);
+    }
+  }
+  
+  // Chase Hijau
+  for (int i = 0; i < numLEDs; i++) {
+    if (allLEDs[i] == PIN_LED_HIJAU_UTARA || allLEDs[i] == PIN_LED_HIJAU_SELATAN || 
+        allLEDs[i] == PIN_LED_HIJAU_TIMUR || allLEDs[i] == PIN_LED_HIJAU_BARAT ||
+        allLEDs[i] == PIN_LED_HIJAU_UTAMA || allLEDs[i] == PIN_LED_HIJAU_CABANG1 || 
+        allLEDs[i] == PIN_LED_HIJAU_CABANG2 || allLEDs[i] == PIN_LED_HIJAU_ARAH1 || 
+        allLEDs[i] == PIN_LED_HIJAU_ARAH2) {
+      digitalWrite(allLEDs[i], HIGH);
+      delay(200);
+      digitalWrite(allLEDs[i], LOW);
+    }
+  }
+}

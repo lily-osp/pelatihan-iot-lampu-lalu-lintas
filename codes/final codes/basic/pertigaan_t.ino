@@ -4,7 +4,7 @@
  * 
  * Sistem traffic light pertigaan T-shape yang realistis dengan fitur:
  * - Main road (jalan utama) dengan traffic lurus dan belok kanan
- * - Side road (jalan samping) dengan belok kiri dan kanan
+ * - Side road (jalan samping) dengan Belok Kanan dan kanan
  * - Timing yang berbeda untuk main road vs side road
  * - Left turn phase untuk side road
  * - Pedestrian crossing consideration
@@ -26,7 +26,7 @@
  * - Pin D18 -> LED Kuning Side Road
  * - Pin D5  -> LED Merah Side Road
  * 
- * Set 3: Left Turn (Belok Kiri dari Side Road)
+ * Set 3: Left Turn (Belok Kanan dari Side Road)
  * - Pin D4  -> LED Hijau Left Turn
  * - Pin D2  -> LED Kuning Left Turn
  * - Pin D15 -> LED Merah Left Turn
@@ -49,7 +49,7 @@ const int PIN_LED_HIJAU_SIDE = 19;
 const int PIN_LED_KUNING_SIDE = 18;
 const int PIN_LED_MERAH_SIDE = 5;
 
-// Set 3: Left Turn (Belok Kiri dari Side Road)
+// Set 3: Left Turn (Belok Kanan dari Side Road)
 const int PIN_LED_HIJAU_LEFT = 4;
 const int PIN_LED_KUNING_LEFT = 2;
 const int PIN_LED_MERAH_LEFT = 15;
@@ -62,7 +62,7 @@ enum TrafficState {
   STATE_4, // Side Road Hijau (Belok Kanan), Main Road & Left Turn Merah
   STATE_5, // Side Road Kuning, Main Road & Left Turn Merah
   STATE_6, // Semua Merah (Transisi)
-  STATE_7, // Left Turn Hijau (Belok Kiri dari Side Road), Main Road & Side Road Merah
+  STATE_7, // Left Turn Hijau (Belok Kanan dari Side Road), Main Road & Side Road Merah
   STATE_8, // Left Turn Kuning, Main Road & Side Road Merah
   STATE_9  // Semua Merah (Transisi)
 };
@@ -76,6 +76,12 @@ const unsigned long DURASI_KUNING = 4000;          // 4 detik
 const unsigned long DURASI_TRANSISI = 2000;        // 2 detik
 const unsigned long DURASI_HIJAU_SIDE = 20000;     // 20 detik - Side road shorter
 const unsigned long DURASI_HIJAU_LEFT = 15000;     // 15 detik - Left turn phase
+
+// Emergency mode variables
+bool emergencyMode = false;
+unsigned long lastBlinkTime = 0;
+bool emergencyBlinkState = false;
+const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
 
 void setup() {
   Serial.begin(115200);
@@ -110,6 +116,22 @@ void setup() {
 void loop() {
   // Logika state machine non-blocking
   unsigned long currentTime = millis();
+  
+  // Handle emergency mode blinking
+  if (emergencyMode) {
+    if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
+      emergencyBlinkState = !emergencyBlinkState;
+      if (emergencyBlinkState) {
+        // Turn on all yellow LEDs
+        turnOnLights(PIN_LED_KUNING_MAIN, PIN_LED_KUNING_SIDE, PIN_LED_KUNING_LEFT);
+      } else {
+        // Turn off all LEDs
+        turnOffAllLights();
+      }
+      lastBlinkTime = currentTime;
+    }
+    return; // Don't proceed with normal state machine during emergency
+  }
   
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
@@ -222,4 +244,18 @@ void turnOnLights(int pin1, int pin2, int pin3) {
   digitalWrite(pin1, HIGH);
   digitalWrite(pin2, HIGH);
   digitalWrite(pin3, HIGH);
+}
+
+void setEmergencyMode() {
+  emergencyMode = true;
+  turnOffAllLights();
+  lastBlinkTime = millis();
+  emergencyBlinkState = false;
+  Serial.println("Emergency Mode Activated - Blinking Yellow");
+}
+
+void clearEmergencyMode() {
+  emergencyMode = false;
+  turnOffAllLights();
+  Serial.println("Emergency Mode Cleared - Returning to Normal");
 } 

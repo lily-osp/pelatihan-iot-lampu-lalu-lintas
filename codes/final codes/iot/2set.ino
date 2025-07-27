@@ -61,6 +61,12 @@ const unsigned long DURASI_KUNING = 3000;         // 3 detik
 const unsigned long DURASI_TRANSISI = 2000;       // 2 detik
 const unsigned long DURASI_HIJAU_ARAH2 = 20000;   // 20 detik
 
+// Emergency mode variables
+bool emergencyMode = false;
+unsigned long lastBlinkTime = 0;
+bool emergencyBlinkState = false;
+const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
+
 // Setup WiFi client dan MQTT
 WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
@@ -106,6 +112,22 @@ void loop() {
   
   // Logika state machine non-blocking
   unsigned long currentTime = millis();
+  
+  // Handle emergency mode blinking
+  if (emergencyMode) {
+    if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
+      emergencyBlinkState = !emergencyBlinkState;
+      if (emergencyBlinkState) {
+        // Turn on all yellow LEDs
+        turnOnLights(PIN_LED_KUNING_ARAH1, PIN_LED_KUNING_ARAH2);
+      } else {
+        // Turn off all LEDs
+        turnOffAllLights();
+      }
+      lastBlinkTime = currentTime;
+    }
+    return; // Don't proceed with normal state machine during emergency
+  }
   
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
@@ -230,6 +252,20 @@ void turnOffAllLights() {
 void turnOnLights(int pin1, int pin2) {
   digitalWrite(pin1, HIGH);
   digitalWrite(pin2, HIGH);
+}
+
+void setEmergencyMode() {
+  emergencyMode = true;
+  turnOffAllLights();
+  lastBlinkTime = millis();
+  emergencyBlinkState = false;
+  Serial.println("Emergency Mode Activated - Blinking Yellow");
+}
+
+void clearEmergencyMode() {
+  emergencyMode = false;
+  turnOffAllLights();
+  Serial.println("Emergency Mode Cleared - Returning to Normal");
 }
 
 void sendDataToCloud() {

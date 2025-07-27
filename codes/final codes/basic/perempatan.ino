@@ -4,7 +4,7 @@
  * 
  * Sistem traffic light perempatan yang lengkap dengan fitur:
  * - 4 arah individual (Utara, Selatan, Timur, Barat)
- * - Support untuk belok kiri dan lurus
+ * - Support untuk Belok Kanan dan lurus
  * - Timing yang realistis untuk traffic flow
  * - Emergency mode dan pedestrian crossing
  * 
@@ -35,7 +35,7 @@
  * - Pin D16 -> LED Kuning Barat
  * - Pin D17 -> LED Merah Barat
  * 
- * Logika: Sistem mendukung individual green lights untuk belok kiri/kanan
+ * Logika: Sistem mendukung individual green lights untuk Belok Kanan/kanan
  * dan timing yang realistis untuk traffic flow
  */
 
@@ -68,10 +68,10 @@ enum TrafficState {
   STATE_4,  // Timur & Barat Hijau (Lurus & Belok Kanan), Utara & Selatan Merah
   STATE_5,  // Timur & Barat Kuning, Utara & Selatan Merah
   STATE_6,  // Semua Merah (Transisi)
-  STATE_7,  // Individual: Utara Hijau (Belok Kiri), Lainnya Merah
-  STATE_8,  // Individual: Timur Hijau (Belok Kiri), Lainnya Merah
-  STATE_9,  // Individual: Selatan Hijau (Belok Kiri), Lainnya Merah
-  STATE_10, // Individual: Barat Hijau (Belok Kiri), Lainnya Merah
+  STATE_7,  // Individual: Utara Hijau (Belok Kanan), Lainnya Merah
+  STATE_8,  // Individual: Timur Hijau (Belok Kanan), Lainnya Merah
+  STATE_9,  // Individual: Selatan Hijau (Belok Kanan), Lainnya Merah
+  STATE_10, // Individual: Barat Hijau (Belok Kanan), Lainnya Merah
   STATE_11, // Emergency Mode: Semua Merah
   STATE_12  // Pedestrian Mode: Semua Merah
 };
@@ -91,6 +91,11 @@ const unsigned long DURASI_PEDESTRIAN = 15000;           // 15 detik pedestrian
 // Mode flags
 bool emergencyMode = false;
 bool pedestrianMode = false;
+
+// Emergency mode blinking variables
+unsigned long lastBlinkTime = 0;
+bool emergencyBlinkState = false;
+const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
 
 void setup() {
   Serial.begin(115200);
@@ -130,6 +135,21 @@ void setup() {
 void loop() {
   // Logika state machine non-blocking
   unsigned long currentTime = millis();
+  
+  // Handle emergency mode blinking
+  if (emergencyMode && currentState == STATE_11) {
+    if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
+      emergencyBlinkState = !emergencyBlinkState;
+      if (emergencyBlinkState) {
+        // Turn on all yellow LEDs
+        turnOnLights(PIN_LED_KUNING_UTARA, PIN_LED_KUNING_SELATAN, PIN_LED_KUNING_TIMUR, PIN_LED_KUNING_BARAT);
+      } else {
+        // Turn off all LEDs
+        turnOffAllLights();
+      }
+      lastBlinkTime = currentTime;
+    }
+  }
   
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
@@ -198,30 +218,30 @@ void changeToNextState() {
       
     case STATE_6:
       currentState = STATE_7;
-      // Individual: Utara Hijau (Belok Kiri), Lainnya Merah
+      // Individual: Utara Hijau (Belok Kanan), Lainnya Merah
       turnOnLights(PIN_LED_HIJAU_UTARA, PIN_LED_MERAH_SELATAN, PIN_LED_MERAH_TIMUR, PIN_LED_MERAH_BARAT);
-      Serial.println("State 7: Individual - Utara Hijau (Belok Kiri)");
+      Serial.println("State 7: Individual - Utara Hijau (Belok Kanan)");
       break;
       
     case STATE_7:
       currentState = STATE_8;
-      // Individual: Timur Hijau (Belok Kiri), Lainnya Merah
+      // Individual: Timur Hijau (Belok Kanan), Lainnya Merah
       turnOnLights(PIN_LED_MERAH_UTARA, PIN_LED_MERAH_SELATAN, PIN_LED_HIJAU_TIMUR, PIN_LED_MERAH_BARAT);
-      Serial.println("State 8: Individual - Timur Hijau (Belok Kiri)");
+      Serial.println("State 8: Individual - Timur Hijau (Belok Kanan)");
       break;
       
     case STATE_8:
       currentState = STATE_9;
-      // Individual: Selatan Hijau (Belok Kiri), Lainnya Merah
+      // Individual: Selatan Hijau (Belok Kanan), Lainnya Merah
       turnOnLights(PIN_LED_MERAH_UTARA, PIN_LED_HIJAU_SELATAN, PIN_LED_MERAH_TIMUR, PIN_LED_MERAH_BARAT);
-      Serial.println("State 9: Individual - Selatan Hijau (Belok Kiri)");
+      Serial.println("State 9: Individual - Selatan Hijau (Belok Kanan)");
       break;
       
     case STATE_9:
       currentState = STATE_10;
-      // Individual: Barat Hijau (Belok Kiri), Lainnya Merah
+      // Individual: Barat Hijau (Belok Kanan), Lainnya Merah
       turnOnLights(PIN_LED_MERAH_UTARA, PIN_LED_MERAH_SELATAN, PIN_LED_MERAH_TIMUR, PIN_LED_HIJAU_BARAT);
-      Serial.println("State 10: Individual - Barat Hijau (Belok Kiri)");
+      Serial.println("State 10: Individual - Barat Hijau (Belok Kanan)");
       break;
       
     case STATE_10:
@@ -232,9 +252,9 @@ void changeToNextState() {
       break;
       
     case STATE_11:
-      // Emergency Mode: Semua Merah
-      turnOnLights(PIN_LED_MERAH_UTARA, PIN_LED_MERAH_SELATAN, PIN_LED_MERAH_TIMUR, PIN_LED_MERAH_BARAT);
-      Serial.println("Emergency Mode: Semua Merah");
+      // Emergency Mode: Blinking Yellow
+      emergencyMode = false; // Reset emergency mode flag
+      Serial.println("Emergency Mode: Blinking Yellow - Returning to Normal");
       currentState = STATE_1; // Kembali ke normal
       break;
       
@@ -277,8 +297,9 @@ void setEmergencyMode() {
   emergencyMode = true;
   currentState = STATE_11;
   turnOffAllLights();
-  turnOnLights(PIN_LED_MERAH_UTARA, PIN_LED_MERAH_SELATAN, PIN_LED_MERAH_TIMUR, PIN_LED_MERAH_BARAT);
-  Serial.println("Emergency Mode Activated");
+  lastBlinkTime = millis();
+  emergencyBlinkState = false;
+  Serial.println("Emergency Mode Activated - Blinking Yellow");
 }
 
 void setPedestrianMode() {

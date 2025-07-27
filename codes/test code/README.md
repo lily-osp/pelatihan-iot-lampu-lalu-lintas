@@ -9,6 +9,7 @@ Folder ini berisi kode testing dan debugging untuk memverifikasi hardware, konek
 |------|--------|----------|-------------|
 | `blink_test.ino` | Hardware Verification | LED + Resistor | 5-10 menit |
 | `wifi_test.ino` | WiFi Connection Test | ESP32 + WiFi | 2-3 menit |
+| `adafruit_test.ino` | Adafruit IO Test | ESP32 + WiFi + MQTT | 3-5 menit |
 
 ## 🔧 Komponen Hardware untuk Testing
 
@@ -87,14 +88,13 @@ Test 5: Color Pattern
 #### Tujuan
 - Test koneksi WiFi ESP32
 - Verifikasi kredensial WiFi
-- Test koneksi Adafruit IO
-- Memastikan IoT functionality
+- Menampilkan informasi koneksi WiFi lengkap
+- Monitor status WiFi secara real-time
 
 #### Komponen yang Ditest
 - **ESP32 WiFi Module**
 - **WiFi Network**
-- **Adafruit IO Connection**
-- **MQTT Protocol**
+- **Network Configuration**
 
 #### Test Sequence
 | Test | Durasi | Tujuan | Expected Result |
@@ -159,7 +159,6 @@ Connection test completed!
 ### 2. WiFi Test (wifi_test.ino)
 1. **Setup Konfigurasi**
    - Edit SSID dan password WiFi
-   - Edit Adafruit IO credentials
    - Periksa network availability
 
 2. **Upload dan Test**
@@ -170,8 +169,28 @@ Connection test completed!
 3. **Verifikasi**
    - WiFi connected successfully
    - IP address obtained
-   - Adafruit IO connected
-   - Data sent successfully
+   - Network information displayed
+   - WiFi monitoring active
+
+### 3. Adafruit IO Test (adafruit_test.ino)
+1. **Setup Konfigurasi**
+   - Edit SSID dan password WiFi
+   - Edit Adafruit IO credentials (username & key)
+   - Pastikan akun Adafruit IO aktif
+   - Buat feeds di Adafruit IO dashboard
+
+2. **Upload dan Test**
+   - Upload kode ke ESP32
+   - Monitor Serial Monitor
+   - Periksa koneksi MQTT
+   - Monitor data publishing
+
+3. **Verifikasi**
+   - WiFi connected successfully
+   - Adafruit IO MQTT broker connected
+   - Data publishing works (string, number, JSON)
+   - Subscribe functionality works
+   - Control messages received
 
 ## 📊 Test Results Validation
 
@@ -186,10 +205,21 @@ Connection test completed!
 ### WiFi Test Checklist
 - [ ] WiFi connects within 10 seconds
 - [ ] IP address is obtained
-- [ ] Adafruit IO connects
-- [ ] MQTT data sends successfully
+- [ ] Network information displayed
+- [ ] WiFi monitoring active
 - [ ] Connection remains stable
 - [ ] No timeout errors
+
+### Adafruit IO Test Checklist
+- [ ] WiFi connects successfully
+- [ ] Adafruit IO MQTT broker connects
+- [ ] String data publishes successfully
+- [ ] Number data publishes successfully
+- [ ] JSON data publishes successfully
+- [ ] Subscribe to control feed works
+- [ ] Control messages received properly
+- [ ] Connection remains stable
+- [ ] No MQTT errors
 
 ## 🔍 Advanced Testing
 
@@ -223,10 +253,24 @@ Hardware Test Results:
 WiFi Test Results:
 ✅ WiFi connection successful
 ✅ IP address: 192.168.1.100
-✅ Adafruit IO connected
-✅ MQTT data transmission OK
+✅ Network information displayed
+✅ WiFi monitoring active
 ⏱️ Connection time: 8 seconds
 📊 Signal strength: -45 dBm
+```
+
+### Adafruit IO Test Report
+```
+Adafruit IO Test Results:
+✅ WiFi connection successful
+✅ Adafruit IO MQTT broker connected
+✅ String data publishing OK
+✅ Number data publishing OK
+✅ JSON data publishing OK
+✅ Subscribe functionality OK
+✅ Control messages received
+⏱️ MQTT connection time: 3 seconds
+📊 Messages sent: 15
 ```
 
 ## 🎯 Rekomendasi Testing

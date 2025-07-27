@@ -5,7 +5,7 @@
  * Sistem traffic light pertigaan Y-shape yang realistis dengan fitur:
  * - 3 arah dengan traffic yang seimbang
  * - Timing yang realistis untuk traffic flow
- * - Support untuk belok kiri dan lurus
+ * - Support untuk Belok Kanan dan lurus
  * - Pedestrian crossing consideration
  * 
  * Komponen:
@@ -65,6 +65,12 @@ const unsigned long DURASI_HIJAU_CABANG2 = 25000;  // 25 detik - Cabang 2
 const unsigned long DURASI_KUNING = 4000;          // 4 detik
 const unsigned long DURASI_TRANSISI = 2000;        // 2 detik
 
+// Emergency mode variables
+bool emergencyMode = false;
+unsigned long lastBlinkTime = 0;
+bool emergencyBlinkState = false;
+const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
+
 void setup() {
   Serial.begin(115200);
   Serial.println("=== Proyek Lampu Lalu Lintas Pertigaan Y-Shape (Basic) ===");
@@ -98,6 +104,22 @@ void setup() {
 void loop() {
   // Logika state machine non-blocking
   unsigned long currentTime = millis();
+  
+  // Handle emergency mode blinking
+  if (emergencyMode) {
+    if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
+      emergencyBlinkState = !emergencyBlinkState;
+      if (emergencyBlinkState) {
+        // Turn on all yellow LEDs
+        turnOnLights(PIN_LED_KUNING_UTAMA, PIN_LED_KUNING_CABANG1, PIN_LED_KUNING_CABANG2);
+      } else {
+        // Turn off all LEDs
+        turnOffAllLights();
+      }
+      lastBlinkTime = currentTime;
+    }
+    return; // Don't proceed with normal state machine during emergency
+  }
   
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
@@ -210,4 +232,18 @@ void turnOnLights(int pin1, int pin2, int pin3) {
   digitalWrite(pin1, HIGH);
   digitalWrite(pin2, HIGH);
   digitalWrite(pin3, HIGH);
+}
+
+void setEmergencyMode() {
+  emergencyMode = true;
+  turnOffAllLights();
+  lastBlinkTime = millis();
+  emergencyBlinkState = false;
+  Serial.println("Emergency Mode Activated - Blinking Yellow");
+}
+
+void clearEmergencyMode() {
+  emergencyMode = false;
+  turnOffAllLights();
+  Serial.println("Emergency Mode Cleared - Returning to Normal");
 } 

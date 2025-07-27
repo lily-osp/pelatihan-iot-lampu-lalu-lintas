@@ -50,26 +50,34 @@ const int PIN_LED_HIJAU_CABANG2 = 4;
 const int PIN_LED_KUNING_CABANG2 = 2;
 const int PIN_LED_MERAH_CABANG2 = 15;
 
-// State machine untuk lampu lalu lintas pertigaan
+// State machine untuk lampu lalu lintas pertigaan Y-shape
 enum TrafficState {
-  STATE_1, // Jalur Utama Hijau, Cabang 1 & 2 Merah
+  STATE_1, // Jalur Utama Hijau (Lurus & Belok Kanan), Cabang 1 & 2 Merah
   STATE_2, // Jalur Utama Kuning, Cabang 1 & 2 Merah
-  STATE_3, // Jalur Utama Merah, Cabang 1 Hijau, Cabang 2 Merah
-  STATE_4, // Jalur Utama Merah, Cabang 1 Kuning, Cabang 2 Merah
-  STATE_5, // Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Hijau
-  STATE_6, // Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Kuning
-  STATE_7  // Semua Merah (Transisi)
+  STATE_3, // Semua Merah (Transisi)
+  STATE_4, // Cabang 1 Hijau (Lurus & Belok Kanan), Jalur Utama & Cabang 2 Merah
+  STATE_5, // Cabang 1 Kuning, Jalur Utama & Cabang 2 Merah
+  STATE_6, // Semua Merah (Transisi)
+  STATE_7, // Cabang 2 Hijau (Lurus & Belok Kanan), Jalur Utama & Cabang 1 Merah
+  STATE_8, // Cabang 2 Kuning, Jalur Utama & Cabang 1 Merah
+  STATE_9  // Semua Merah (Transisi)
 };
 
 TrafficState currentState = STATE_1;
 unsigned long lastStateChange = 0;
 
-// Durasi setiap state (dalam milidetik)
-const unsigned long DURASI_HIJAU_UTAMA = 30000;    // 30 detik
-const unsigned long DURASI_KUNING = 3000;          // 3 detik
+// Durasi setiap state (dalam milidetik) - Realistic timing untuk Y-shape
+const unsigned long DURASI_HIJAU_UTAMA = 30000;    // 30 detik - Jalur utama
+const unsigned long DURASI_HIJAU_CABANG1 = 25000;  // 25 detik - Cabang 1
+const unsigned long DURASI_HIJAU_CABANG2 = 25000;  // 25 detik - Cabang 2
+const unsigned long DURASI_KUNING = 4000;          // 4 detik
 const unsigned long DURASI_TRANSISI = 2000;        // 2 detik
-const unsigned long DURASI_HIJAU_CABANG1 = 15000;  // 15 detik
-const unsigned long DURASI_HIJAU_CABANG2 = 12000;  // 12 detik
+
+// Emergency mode variables
+bool emergencyMode = false;
+unsigned long lastBlinkTime = 0;
+bool emergencyBlinkState = false;
+const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
 
 // Setup WiFi client dan MQTT
 WiFiClient client;
@@ -122,6 +130,22 @@ void loop() {
   // Logika state machine non-blocking
   unsigned long currentTime = millis();
   
+  // Handle emergency mode blinking
+  if (emergencyMode) {
+    if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
+      emergencyBlinkState = !emergencyBlinkState;
+      if (emergencyBlinkState) {
+        // Turn on all yellow LEDs
+        turnOnLights(PIN_LED_KUNING_UTAMA, PIN_LED_KUNING_CABANG1, PIN_LED_KUNING_CABANG2);
+      } else {
+        // Turn off all LEDs
+        turnOffAllLights();
+      }
+      lastBlinkTime = currentTime;
+    }
+    return; // Don't proceed with normal state machine during emergency
+  }
+  
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
     lastStateChange = currentTime;
@@ -173,11 +197,13 @@ unsigned long getStateDuration() {
   switch (currentState) {
     case STATE_1: return DURASI_HIJAU_UTAMA;
     case STATE_2: return DURASI_KUNING;
-    case STATE_3: return DURASI_HIJAU_CABANG1;
-    case STATE_4: return DURASI_KUNING;
-    case STATE_5: return DURASI_HIJAU_CABANG2;
-    case STATE_6: return DURASI_KUNING;
-    case STATE_7: return DURASI_TRANSISI;
+    case STATE_3: return DURASI_TRANSISI;
+    case STATE_4: return DURASI_HIJAU_CABANG1;
+    case STATE_5: return DURASI_KUNING;
+    case STATE_6: return DURASI_TRANSISI;
+    case STATE_7: return DURASI_HIJAU_CABANG2;
+    case STATE_8: return DURASI_KUNING;
+    case STATE_9: return DURASI_TRANSISI;
     default: return 5000;
   }
 }
@@ -197,40 +223,54 @@ void changeToNextState() {
       
     case STATE_2:
       currentState = STATE_3;
-      // Jalur Utama Merah, Cabang 1 Hijau, Cabang 2 Merah
-      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_HIJAU_CABANG1, PIN_LED_MERAH_CABANG2);
-      Serial.println("State 3: Jalur Utama Merah, Cabang 1 Hijau, Cabang 2 Merah");
+      // Semua Merah (Transisi)
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_MERAH_CABANG2);
+      Serial.println("State 3: Semua Merah (Transisi)");
       break;
       
     case STATE_3:
       currentState = STATE_4;
-      // Jalur Utama Merah, Cabang 1 Kuning, Cabang 2 Merah
-      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_KUNING_CABANG1, PIN_LED_MERAH_CABANG2);
-      Serial.println("State 4: Jalur Utama Merah, Cabang 1 Kuning, Cabang 2 Merah");
+      // Cabang 1 Hijau, Jalur Utama & Cabang 2 Merah
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_HIJAU_CABANG1, PIN_LED_MERAH_CABANG2);
+      Serial.println("State 4: Cabang 1 Hijau, Jalur Utama & Cabang 2 Merah");
       break;
       
     case STATE_4:
       currentState = STATE_5;
-      // Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Hijau
-      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_HIJAU_CABANG2);
-      Serial.println("State 5: Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Hijau");
+      // Cabang 1 Kuning, Jalur Utama & Cabang 2 Merah
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_KUNING_CABANG1, PIN_LED_MERAH_CABANG2);
+      Serial.println("State 5: Cabang 1 Kuning, Jalur Utama & Cabang 2 Merah");
       break;
       
     case STATE_5:
       currentState = STATE_6;
-      // Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Kuning
-      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_KUNING_CABANG2);
-      Serial.println("State 6: Jalur Utama Merah, Cabang 1 Merah, Cabang 2 Kuning");
+      // Semua Merah (Transisi)
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_MERAH_CABANG2);
+      Serial.println("State 6: Semua Merah (Transisi)");
       break;
       
     case STATE_6:
       currentState = STATE_7;
-      // Semua Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_MERAH_CABANG2);
-      Serial.println("State 7: Semua Merah (Transisi)");
+      // Cabang 2 Hijau, Jalur Utama & Cabang 1 Merah
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_HIJAU_CABANG2);
+      Serial.println("State 7: Cabang 2 Hijau, Jalur Utama & Cabang 1 Merah");
       break;
       
     case STATE_7:
+      currentState = STATE_8;
+      // Cabang 2 Kuning, Jalur Utama & Cabang 1 Merah
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_KUNING_CABANG2);
+      Serial.println("State 8: Cabang 2 Kuning, Jalur Utama & Cabang 1 Merah");
+      break;
+      
+    case STATE_8:
+      currentState = STATE_9;
+      // Semua Merah (Transisi)
+      turnOnLights(PIN_LED_MERAH_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_MERAH_CABANG2);
+      Serial.println("State 9: Semua Merah (Transisi)");
+      break;
+      
+    case STATE_9:
       currentState = STATE_1;
       // Jalur Utama Hijau, Cabang 1 & 2 Merah
       turnOnLights(PIN_LED_HIJAU_UTAMA, PIN_LED_MERAH_CABANG1, PIN_LED_MERAH_CABANG2);
@@ -258,6 +298,20 @@ void turnOnLights(int pin1, int pin2, int pin3) {
   digitalWrite(pin1, HIGH);
   digitalWrite(pin2, HIGH);
   digitalWrite(pin3, HIGH);
+}
+
+void setEmergencyMode() {
+  emergencyMode = true;
+  turnOffAllLights();
+  lastBlinkTime = millis();
+  emergencyBlinkState = false;
+  Serial.println("Emergency Mode Activated - Blinking Yellow");
+}
+
+void clearEmergencyMode() {
+  emergencyMode = false;
+  turnOffAllLights();
+  Serial.println("Emergency Mode Cleared - Returning to Normal");
 }
 
 void sendDataToCloud() {

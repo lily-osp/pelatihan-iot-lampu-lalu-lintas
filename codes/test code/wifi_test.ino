@@ -1,69 +1,49 @@
 /*
  * WiFi Test - ESP32
- * Program untuk menguji koneksi WiFi dan Adafruit IO
+ * Program untuk menguji koneksi WiFi
  * 
  * Komponen:
  * - ESP32 Dev Kit
  * 
  * Tujuan:
  * - Menguji koneksi WiFi
- * - Menguji koneksi ke Adafruit IO
- * - Memverifikasi kredensial
+ * - Memverifikasi kredensial WiFi
+ * - Menampilkan informasi koneksi WiFi
  */
 
 #include <WiFi.h>
-#include <Adafruit_MQTT.h>
-#include <Adafruit_MQTT_Client.h>
 
 // Konfigurasi WiFi
 const char* ssid = "YOUR_WIFI_SSID";
 const char* password = "YOUR_WIFI_PASSWORD";
 
-// Konfigurasi Adafruit IO
-#define AIO_SERVER      "io.adafruit.com"
-#define AIO_SERVERPORT  1883
-#define AIO_USERNAME    "YOUR_AIO_USERNAME"
-#define AIO_KEY         "YOUR_AIO_KEY"
-
-// Setup WiFi client dan MQTT
-WiFiClient client;
-Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
-
-// Setup MQTT feeds untuk testing
-Adafruit_MQTT_Publish testFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/test-feed");
-Adafruit_MQTT_Subscribe testSubscribe = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/test-feed");
-
 void setup() {
   Serial.begin(115200);
-  Serial.println("=== WiFi & Adafruit IO Test ===");
+  Serial.println("=== WiFi Test - ESP32 ===");
   
-  // Test 1: Koneksi WiFi
+  // Test koneksi WiFi
   testWiFiConnection();
   
-  // Test 2: Koneksi Adafruit IO
-  testAdafruitIOConnection();
-  
-  Serial.println("=== Test Selesai ===");
+  Serial.println("=== Test WiFi Selesai ===");
 }
 
 void loop() {
-  // Periksa koneksi MQTT dan reconnect jika perlu
-  if (!mqtt.connected()) {
-    Serial.println("MQTT terputus, mencoba reconnect...");
-    connectToMQTT();
-  }
-  mqtt.processPackets(100);
-  
-  // Kirim test message setiap 10 detik
-  static unsigned long lastSend = 0;
-  if (millis() - lastSend >= 10000) {
-    sendTestMessage();
-    lastSend = millis();
+  // Monitor status WiFi setiap 30 detik
+  static unsigned long lastCheck = 0;
+  if (millis() - lastCheck >= 30000) {
+    monitorWiFiStatus();
+    lastCheck = millis();
   }
 }
 
 void testWiFiConnection() {
-  Serial.println("\n=== Test 1: Koneksi WiFi ===");
+  Serial.println("\n=== Test Koneksi WiFi ===");
+  Serial.print("SSID: ");
+  Serial.println(ssid);
+  Serial.print("Password: ");
+  Serial.println(password);
+  Serial.println();
+  
   Serial.print("Menghubungkan ke WiFi: ");
   Serial.println(ssid);
   
@@ -79,82 +59,60 @@ void testWiFiConnection() {
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println();
     Serial.println("✓ WiFi terhubung!");
+    Serial.println();
+    Serial.println("=== Informasi Koneksi WiFi ===");
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
+    Serial.print("Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+    Serial.print("Subnet Mask: ");
+    Serial.println(WiFi.subnetMask());
+    Serial.print("DNS Server: ");
+    Serial.println(WiFi.dnsIP());
     Serial.print("Signal Strength (RSSI): ");
     Serial.print(WiFi.RSSI());
     Serial.println(" dBm");
+    Serial.print("WiFi Channel: ");
+    Serial.println(WiFi.channel());
+    Serial.print("MAC Address: ");
+    Serial.println(WiFi.macAddress());
   } else {
     Serial.println();
     Serial.println("✗ Gagal terhubung ke WiFi!");
     Serial.println("Periksa SSID dan password WiFi Anda.");
+    Serial.println("Pastikan WiFi router Anda aktif dan dalam jangkauan.");
   }
 }
 
-void testAdafruitIOConnection() {
-  Serial.println("\n=== Test 2: Koneksi Adafruit IO ===");
+void monitorWiFiStatus() {
+  Serial.println("\n=== Monitor Status WiFi ===");
+  Serial.print("Status: ");
   
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("✗ WiFi tidak terhubung. Tidak dapat test Adafruit IO.");
-    return;
-  }
-  
-  Serial.println("Menghubungkan ke Adafruit IO...");
-  
-  int8_t ret;
-  int attempts = 0;
-  while ((ret = mqtt.connect()) != 0 && attempts < 5) {
-    Serial.println(mqtt.connectErrorString(ret));
-    Serial.println("Mencoba koneksi ulang dalam 5 detik...");
-    mqtt.disconnect();
-    delay(5000);
-    attempts++;
-  }
-  
-  if (ret == 0) {
-    Serial.println("✓ Adafruit IO terhubung!");
-    
-    // Test publish
-    if (testFeed.publish("Hello from ESP32!")) {
-      Serial.println("✓ Berhasil publish test message");
-    } else {
-      Serial.println("✗ Gagal publish test message");
-    }
-    
-    // Subscribe ke feed
-    mqtt.subscribe(&testSubscribe);
-    Serial.println("✓ Berhasil subscribe ke test feed");
-    
-  } else {
-    Serial.println("✗ Gagal terhubung ke Adafruit IO!");
-    Serial.println("Periksa kredensial Adafruit IO Anda:");
-    Serial.print("Username: ");
-    Serial.println(AIO_USERNAME);
-    Serial.print("Key: ");
-    Serial.println(AIO_KEY);
-  }
-}
-
-void connectToMQTT() {
-  Serial.println("Menghubungkan ke Adafruit IO...");
-  
-  int8_t ret;
-  while ((ret = mqtt.connect()) != 0) {
-    Serial.println(mqtt.connectErrorString(ret));
-    Serial.println("Mencoba koneksi ulang dalam 5 detik...");
-    mqtt.disconnect();
-    delay(5000);
-  }
-  
-  Serial.println("Adafruit IO terhubung!");
-  mqtt.subscribe(&testSubscribe);
-}
-
-void sendTestMessage() {
-  String message = "Test message dari ESP32 - " + String(millis() / 1000) + "s";
-  if (testFeed.publish(message.c_str())) {
-    Serial.println("✓ Test message terkirim: " + message);
-  } else {
-    Serial.println("✗ Gagal mengirim test message");
+  switch (WiFi.status()) {
+    case WL_CONNECTED:
+      Serial.println("✓ Terhubung");
+      Serial.print("IP: ");
+      Serial.println(WiFi.localIP());
+      Serial.print("RSSI: ");
+      Serial.print(WiFi.RSSI());
+      Serial.println(" dBm");
+      break;
+    case WL_DISCONNECTED:
+      Serial.println("✗ Terputus");
+      Serial.println("Mencoba reconnect...");
+      WiFi.reconnect();
+      break;
+    case WL_CONNECT_FAILED:
+      Serial.println("✗ Gagal koneksi");
+      break;
+    case WL_NO_SSID_AVAIL:
+      Serial.println("✗ SSID tidak ditemukan");
+      break;
+    case WL_WRONG_PASSWORD:
+      Serial.println("✗ Password salah");
+      break;
+    default:
+      Serial.println("✗ Status tidak diketahui");
+      break;
   }
 } 

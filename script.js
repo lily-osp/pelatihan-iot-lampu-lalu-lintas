@@ -72,11 +72,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 [4, 'Merah', 'Merah', 'Hijau', 'Hijau', 25, 'Timur & Barat Hijau, Utara & Selatan Merah'],
                 [5, 'Merah', 'Merah', 'Kuning', 'Kuning', 4, 'Timur & Barat Kuning, Utara & Selatan Merah'],
                 [6, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [7, 'Hijau', 'Merah', 'Merah', 'Merah', 10, 'Individual: Utara Hijau (Belok Kiri)'],
-                [8, 'Merah', 'Merah', 'Hijau', 'Merah', 10, 'Individual: Timur Hijau (Belok Kiri)'],
-                [9, 'Merah', 'Hijau', 'Merah', 'Merah', 10, 'Individual: Selatan Hijau (Belok Kiri)'],
-                [10, 'Merah', 'Merah', 'Merah', 'Hijau', 10, 'Individual: Barat Hijau (Belok Kiri)'],
-                [11, 'Merah', 'Merah', 'Merah', 'Merah', 5, 'Emergency Mode: Semua Merah'],
+                [7, 'Hijau', 'Merah', 'Merah', 'Merah', 10, 'Individual: Utara Hijau (Belok Kanan)'],
+                [8, 'Merah', 'Merah', 'Hijau', 'Merah', 10, 'Individual: Timur Hijau (Belok Kanan)'],
+                [9, 'Merah', 'Hijau', 'Merah', 'Merah', 10, 'Individual: Selatan Hijau (Belok Kanan)'],
+                [10, 'Merah', 'Merah', 'Merah', 'Hijau', 10, 'Individual: Barat Hijau (Belok Kanan)'],
+                [11, 'Kuning*', 'Kuning*', 'Kuning*', 'Kuning*', 5, 'Emergency Mode: Blinking Yellow'],
                 [12, 'Merah', 'Merah', 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
             ],
             info: {
