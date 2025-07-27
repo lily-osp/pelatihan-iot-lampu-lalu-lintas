@@ -176,6 +176,26 @@ Buka file `index.html` untuk mengakses demo interaktif yang menyediakan:
 3. Amati tabel state machine dan grafik durasi
 4. Bandingkan logika antar sistem
 
+## 🎮 Simulasi Wokwi Online
+
+Test dan verifikasi kode Arduino secara online menggunakan simulator Wokwi sebelum implementasi hardware:
+
+### 🔧 **Test Code**
+- **[🔧 Blink Test](https://wokwi.com/projects/437652096534506497)** - Verifikasi hardware dan koneksi LED
+
+### 🛣️ **Basic Version (Non-IoT)**
+- **[🛣️ Jalan Lurus 2 Arah](https://wokwi.com/projects/437655672510267393)** - Sistem traffic light 2 arah sederhana
+- **[🔀 Pertigaan Y-Shape](https://wokwi.com/projects/437654184425653249)** - Sistem pertigaan Y-shape dengan 3 arah
+- **[🔀 Pertigaan T-Shape](https://wokwi.com/projects/437654133817178113)** - Sistem pertigaan T-shape dengan main road priority
+- **[🚦 Perempatan Lengkap](https://wokwi.com/projects/437653190980547585)** - Sistem perempatan 4 arah dengan fitur lengkap
+
+### 💡 **Cara Menggunakan Simulasi**
+1. Klik link simulasi untuk membuka Wokwi
+2. Klik tombol "Start Simulation" untuk menjalankan
+3. Monitor Serial untuk melihat log state machine
+4. Observe LED behavior sesuai dengan state
+5. Gunakan "Stop Simulation" untuk menghentikan
+
 ## 🔍 Jenis Sistem
 
 ### 🛣️ **1. Jalan Lurus 2 Arah**
