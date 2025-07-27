@@ -374,8 +374,9 @@ p {
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-8);
+    gap: var(--spacing-10);
     margin-bottom: var(--spacing-8);
+    margin-top: var(--spacing-8);
 }
 
 .card {
@@ -385,6 +386,12 @@ p {
     overflow: hidden;
     transition: var(--transition-normal);
     border: 1px solid var(--neutral-200);
+    margin-bottom: var(--spacing-6);
+}
+
+/* Standalone cards that need extra spacing */
+.card:not(.card-grid .card) {
+    margin-bottom: var(--spacing-8);
 }
 
 .card:hover {
@@ -454,7 +461,7 @@ p {
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-8);
+    gap: var(--spacing-10);
     margin-top: var(--spacing-6);
 }
 
@@ -472,6 +479,7 @@ p {
     padding: var(--spacing-8);
     box-shadow: var(--shadow-md);
     margin-top: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
 }
 
 .architecture-showcase h3 {
@@ -534,6 +542,7 @@ p {
     padding: var(--spacing-8);
     box-shadow: var(--shadow-md);
     margin-top: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
 }
 
 .hardware-showcase h3 {
@@ -723,8 +732,9 @@ p {
 .simulation-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-8);
+    gap: var(--spacing-10);
     margin-bottom: var(--spacing-8);
+    margin-top: var(--spacing-8);
 }
 
 .simulation-card {
@@ -797,6 +807,7 @@ p {
     padding: var(--spacing-8);
     box-shadow: var(--shadow-md);
     margin-top: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
 }
 
 .usage-guide h3 {
@@ -916,7 +927,8 @@ p {
 .resources-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: var(--spacing-8);
+    gap: var(--spacing-10);
+    margin-top: var(--spacing-8);
 }
 
 .resource-card {
