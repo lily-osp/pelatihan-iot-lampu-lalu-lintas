@@ -7,6 +7,11 @@
 [![MQTT](https://img.shields.io/badge/MQTT-Protocol-orange.svg)](https://mqtt.org/)
 [![Adafruit IO](https://img.shields.io/badge/Adafruit%20IO-Cloud-purple.svg)](https://io.adafruit.com/)
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black.svg)](https://github.com/lily-osp/pelatihan-iot-lampu-lalu-lintas)
+[![Demo](https://img.shields.io/badge/Demo-Interactive-blue.svg)](https://lily-osp.github.io/pelatihan-iot-lampu-lalu-lintas/)
+
+**📁 [Lihat Kode Sumber di GitHub](https://github.com/lily-osp/pelatihan-iot-lampu-lalu-lintas) | 🌐 [Demo Interaktif](https://lily-osp.github.io/pelatihan-iot-lampu-lalu-lintas/)**
+
 ## 📋 Daftar Isi
 
 - [🎯 Tentang Proyek](#-tentang-proyek)
