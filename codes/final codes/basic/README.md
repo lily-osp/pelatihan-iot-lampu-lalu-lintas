@@ -21,20 +21,9 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 - **Breadboard** (1 unit)
 - **Kabel Jumper** (sesuai kebutuhan)
 
-### Spesifikasi LED
-- **Warna**: Merah, Kuning, Hijau
-- **Tegangan**: 3.3V (sesuai ESP32)
-- **Arus**: ~20mA per LED
-- **Resistor**: 220Ω untuk membatasi arus
-
 ## 📋 Detail Sistem
 
 ### 1. 🛣️ **2set.ino** - Jalan Lurus 2 Arah
-
-#### Komponen
-- **6 LED**: 2 set (Merah, Kuning, Hijau) × 2 arah
-- **6 Resistor 220Ω**
-- **6 Pin ESP32**
 
 #### Koneksi Hardware
 | Pin ESP32 | LED | Arah |
@@ -56,20 +45,7 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 | 5 | 🔴 Merah | 🟡 Kuning | 3 detik |
 | 6 | 🔴 Merah | 🔴 Merah | 2 detik |
 
-#### Timing
-- **Total Siklus**: ~50 detik
-- **Hijau**: 20 detik per arah
-- **Kuning**: 3 detik
-- **Transisi**: 2 detik
-
----
-
 ### 2. 🔀 **pertigaan_y.ino** - Pertigaan Y-Shape
-
-#### Komponen
-- **9 LED**: 3 set (Merah, Kuning, Hijau) × 3 jalur
-- **9 Resistor 220Ω**
-- **9 Pin ESP32**
 
 #### Koneksi Hardware
 | Pin ESP32 | LED | Jalur |
@@ -97,21 +73,7 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 | 8 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 4 detik |
 | 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik |
 
-#### Timing
-- **Total Siklus**: ~120 detik
-- **Jalur Utama**: 30 detik
-- **Cabang 1 & 2**: 25 detik masing-masing
-- **Kuning**: 4 detik
-- **Transisi**: 2 detik
-
----
-
 ### 3. 🔀 **pertigaan_t.ino** - Pertigaan T-Shape
-
-#### Komponen
-- **9 LED**: 3 set (Merah, Kuning, Hijau) × 3 jalur
-- **9 Resistor 220Ω**
-- **9 Pin ESP32**
 
 #### Koneksi Hardware
 | Pin ESP32 | LED | Jalur |
@@ -139,22 +101,7 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 | 8 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 4 detik |
 | 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik |
 
-#### Timing
-- **Total Siklus**: ~100 detik
-- **Main Road**: 35 detik (prioritas)
-- **Side Road**: 20 detik
-- **Left Turn**: 15 detik
-- **Kuning**: 4 detik
-- **Transisi**: 2 detik
-
----
-
 ### 4. 🚦 **perempatan.ino** - Perempatan Lengkap
-
-#### Komponen
-- **12 LED**: 4 set (Merah, Kuning, Hijau) × 4 arah
-- **12 Resistor 220Ω**
-- **12 Pin ESP32**
 
 #### Koneksi Hardware
 | Pin ESP32 | LED | Arah |
@@ -188,14 +135,6 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 | 11 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 5 detik |
 | 12 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 15 detik |
 
-#### Timing
-- **Total Siklus**: ~180 detik
-- **Utara-Selatan**: 30 detik
-- **Timur-Barat**: 25 detik
-- **Individual Turns**: 10 detik masing-masing
-- **Emergency Mode**: 5 detik
-- **Pedestrian Mode**: 15 detik
-
 ## 🚀 Cara Penggunaan
 
 ### 1. Persiapan Hardware
@@ -223,12 +162,6 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 | State tidak berubah | Kode error | Periksa Serial Monitor |
 | Timing tidak akurat | ESP32 clock | Reset ESP32 |
 | LED redup | Resistor terlalu besar | Gunakan 220Ω |
-
-### Tips Debugging
-- **Serial Monitor**: Selalu monitor untuk status
-- **Test LED**: Test satu per satu sebelum assembly
-- **Voltage Check**: Pastikan 3.3V ke LED
-- **Ground**: Pastikan ground terhubung dengan benar
 
 ## 📊 Perbandingan Sistem
 
@@ -259,4 +192,4 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **basic** (t
 
 ---
 
-**💡 Tips**: Semua sistem menggunakan logika yang sama, hanya berbeda dalam jumlah LED dan kompleksitas state machine! 
+**💡 Tips**: Semua sistem menggunakan logika yang sama, hanya berbeda dalam jumlah LED dan kompleksitas state machine!

@@ -313,11 +313,13 @@
             
             <div style="background:#fff; border-radius:1rem; box-shadow:0 2px 8px rgba(0,0,0,0.04); padding:2rem; margin-bottom:2rem;">
                 <h3 style="font-size:1.5rem; font-weight:600; margin-bottom:1rem; color:#166534;">Logika Lampu Lalu Lintas Interaktif</h3>
-                <p style="text-align:center; margin-bottom:1.5rem; color:#6b7280;">Sistem menggunakan state machine untuk mengatur urutan lampu lalu lintas. Pilih jenis simpang untuk melihat logika yang berbeda dan durasi setiap state.</p>
+                <p style="text-align:center; margin-bottom:1.5rem; color:#6b7280;">Sistem menggunakan state machine untuk mengatur urutan lampu lalu lintas. Pilih jenis simpang untuk melihat logika yang berbeda dan durasi setiap state sesuai dengan implementasi kode Arduino yang sebenarnya.</p>
                 
                 <div style="text-align:center; margin-bottom:2rem;">
-                    <button type="button" id="btnPerempatan" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#166534; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Simpang Empat</button>
-                    <button type="button" id="btnPertigaan" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#737373; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Simpang Tiga</button>
+                    <button type="button" id="btn2Way" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#166534; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Jalan Lurus 2 Arah</button>
+                    <button type="button" id="btnYShape" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#737373; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Pertigaan Y-Shape</button>
+                    <button type="button" id="btnTShape" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#737373; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Pertigaan T-Shape</button>
+                    <button type="button" id="btn4Way" style="margin:0 0.5rem; padding:0.75rem 1.5rem; background:#737373; color:white; border:none; border-radius:0.5rem; font-weight:500; font-size:1rem;">Perempatan Lengkap</button>
                 </div>
                 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-bottom:2rem;">
@@ -334,6 +336,24 @@
                         <h4 style="font-size:1.125rem; font-weight:600; margin-bottom:1rem; text-align:center;">Grafik Durasi State</h4>
                         <div style="background:#fff; border:1px solid #e5e7eb; border-radius:0.5rem; padding:1rem; height:350px;">
                             <canvas id="trafficChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background:#f9fafb; border-radius:0.5rem; padding:1.5rem; margin-top:2rem;">
+                    <h4 style="font-size:1.125rem; font-weight:600; margin-bottom:1rem; color:#166534;">Informasi Sistem</h4>
+                    <div id="systemInfo" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; font-size:0.9rem;">
+                        <div>
+                            <strong>Total Siklus:</strong> <span id="totalCycle">-</span>
+                        </div>
+                        <div>
+                            <strong>Jumlah State:</strong> <span id="stateCount">-</span>
+                        </div>
+                        <div>
+                            <strong>Durasi Hijau Terpanjang:</strong> <span id="maxGreen">-</span>
+                        </div>
+                        <div>
+                            <strong>Durasi Transisi:</strong> <span id="transitionTime">-</span>
                         </div>
                     </div>
                 </div>
@@ -777,7 +797,7 @@
         </section>
     </main>
     
-    <footer style="text-align:center; color:#737373; font-size:0.95rem; margin:2rem 0 1rem;">&copy; 2024 IoT Lampu Lalu Lintas Cerdas. Materi pembelajaran komprehensif untuk proyek IoT.</footer>
+    <footer style="text-align:center; color:#737373; font-size:0.95rem; margin:2rem 0 1rem;">&copy; 2025 IoT Lampu Lalu Lintas Cerdas. Materi pembelajaran komprehensif untuk proyek IoT.</footer>
     
     <script src="script.js"></script>
 </body>
