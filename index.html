@@ -212,6 +212,138 @@
                 </div>
             </div>
             
+            <!-- IoT Layer Architecture Explanation -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🏗️</div>
+                    <h3>Arsitektur Lapisan IoT</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Arsitektur IoT terdiri dari berbagai lapisan yang bekerja sama untuk menciptakan sistem yang terintegrasi. Setiap lapisan memiliki fungsi spesifik dan dapat dikategorikan menjadi beberapa model arsitektur yang berbeda berdasarkan kompleksitas dan kebutuhan aplikasi.
+                    </p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>Model 3 Lapisan (Basic IoT)</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Lapisan Persepsi</span> - Sensor, actuator, dan perangkat fisik</li>
+                                <li><span class="status-active">Lapisan Jaringan</span> - Komunikasi dan konektivitas</li>
+                                <li><span class="status-active">Lapisan Aplikasi</span> - Interface pengguna dan analisis</li>
+                                <li><span class="status-masked">Cocok untuk</span> - Aplikasi IoT sederhana dan prototyping</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>Model 4 Lapisan (Standard IoT)</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Lapisan Sensor</span> - Pengumpulan data dari lingkungan</li>
+                                <li><span class="status-active">Lapisan Gateway</span> - Pengolahan data lokal</li>
+                                <li><span class="status-active">Lapisan Edge</span> - Komputasi tepi dan analisis</li>
+                                <li><span class="status-active">Lapisan Cloud</span> - Penyimpanan dan analisis lanjutan</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>Model 5 Lapisan (Advanced IoT)</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Lapisan Sensor</span> - Perangkat IoT dan sensor</li>
+                                <li><span class="status-active">Lapisan Gateway</span> - Gateway dan preprocessing</li>
+                                <li><span class="status-active">Lapisan Edge</span> - Edge computing dan analisis</li>
+                                <li><span class="status-active">Lapisan Fog</span> - Fog computing dan caching</li>
+                                <li><span class="status-active">Lapisan Cloud</span> - Cloud computing dan AI</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>Karakteristik Setiap Model</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">3 Lapisan</span> - Sederhana, hemat biaya, cocok untuk skala kecil</li>
+                                <li><span class="status-active">4 Lapisan</span> - Seimbang, fleksibel, untuk aplikasi menengah</li>
+                                <li><span class="status-active">5 Lapisan</span> - Kompleks, canggih, untuk enterprise</li>
+                                <li><span class="status-masked">Pemilihan</span> - Berdasarkan kompleksitas dan kebutuhan bisnis</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h3>Perbandingan Arsitektur IoT</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>Model 3 Lapisan</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Keunggulan</span> - Implementasi cepat dan biaya rendah</li>
+                                        <li><span class="status-active">Keterbatasan</span> - Skalabilitas terbatas</li>
+                                        <li><span class="status-active">Aplikasi</span> - Smart home, monitoring sederhana</li>
+                                        <li><span class="status-active">Kompleksitas</span> - Rendah</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Model 4 Lapisan</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Keunggulan</span> - Fleksibilitas dan skalabilitas baik</li>
+                                        <li><span class="status-active">Keterbatasan</span> - Biaya implementasi lebih tinggi</li>
+                                        <li><span class="status-active">Aplikasi</span> - Smart city, industrial IoT</li>
+                                        <li><span class="status-active">Kompleksitas</span> - Menengah</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Model 5 Lapisan</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Keunggulan</span> - Performa tinggi dan AI integration</li>
+                                        <li><span class="status-active">Keterbatasan</span> - Biaya dan kompleksitas tinggi</li>
+                                        <li><span class="status-active">Aplikasi</span> - Enterprise, autonomous systems</li>
+                                        <li><span class="status-active">Kompleksitas</span> - Tinggi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🔧</div>
+                            <h3>Implementasi dalam Proyek Lampu Lalu Lintas</h3>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-content">
+                                Proyek IoT Lampu Lalu Lintas ini menggunakan model <strong>3 lapisan</strong> yang sesuai untuk pembelajaran dan prototyping:
+                            </p>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>Lapisan Persepsi</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">ESP32</span> - Mikrokontroler dengan sensor dan actuator</li>
+                                        <li><span class="status-active">LED Traffic Lights</span> - Aktuator untuk kontrol lalu lintas</li>
+                                        <li><span class="status-active">WiFi Module</span> - Konektivitas jaringan</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Lapisan Jaringan</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">WiFi Connection</span> - Koneksi ke internet</li>
+                                        <li><span class="status-active">MQTT Protocol</span> - Komunikasi real-time</li>
+                                        <li><span class="status-active">Adafruit IO</span> - Platform cloud messaging</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Lapisan Aplikasi</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Web Dashboard</span> - Interface monitoring</li>
+                                        <li><span class="status-active">Mobile App</span> - Kontrol jarak jauh</li>
+                                        <li><span class="status-active">Data Analytics</span> - Analisis pola lalu lintas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Additional IoT Content -->
             <div class="card">
                 <div class="card-header">
@@ -363,6 +495,161 @@
                                 <li><span class="status-active">HTTP Client</span> - Request web</li>
                                 <li><span class="status-active">WebSocket</span> - Komunikasi real-time</li>
                             </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ESP32 vs Arduino Uno + WiFi01 Comparison -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚖️</div>
+                    <h3>ESP32 vs Arduino Uno + WiFi01: Perbandingan Komprehensif</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Pemilihan ESP32 sebagai mikrokontroler utama untuk proyek IoT Lampu Lalu Lintas didasarkan pada analisis mendalam terhadap kebutuhan sistem, performa, dan kemudahan implementasi. Berikut adalah perbandingan detail dengan alternatif Arduino Uno + WiFi01.
+                    </p>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🚀</div>
+                            <h3>ESP32: Pilihan Utama</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>✅ Keunggulan ESP32</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Dual-Core Processor</span> - 240MHz, performa tinggi</li>
+                                        <li><span class="status-active">WiFi & Bluetooth Built-in</span> - Tidak perlu modul tambahan</li>
+                                        <li><span class="status-active">RAM 520KB</span> - Kapasitas memori besar</li>
+                                        <li><span class="status-active">GPIO 34 Pins</span> - Banyak pin I/O</li>
+                                        <li><span class="status-active">ADC 18 Channel</span> - Input analog yang banyak</li>
+                                        <li><span class="status-active">DAC 2 Channel</span> - Output analog</li>
+                                        <li><span class="status-active">Harga Terjangkau</span> - ~$5-8 per unit</li>
+                                        <li><span class="status-active">Konsumsi Daya Rendah</span> - Efisien untuk IoT</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>❌ Keterbatasan ESP32</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-failed">Kompleksitas Setup</span> - Konfigurasi lebih rumit</li>
+                                        <li><span class="status-failed">Boot Pins</span> - Beberapa pin terbatas</li>
+                                        <li><span class="status-failed">Voltage Level</span> - 3.3V (bukan 5V)</li>
+                                        <li><span class="status-failed">Documentation</span> - Dokumentasi lebih kompleks</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🔌</div>
+                            <h3>Arduino Uno + WiFi01: Alternatif</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>✅ Keunggulan Arduino Uno + WiFi01</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Kemudahan Penggunaan</span> - Setup sederhana</li>
+                                        <li><span class="status-active">Kompatibilitas 5V</span> - Level tegangan standar</li>
+                                        <li><span class="status-active">Dokumentasi Lengkap</span> - Tutorial banyak tersedia</li>
+                                        <li><span class="status-active">Ekosistem Besar</li> - Library dan komunitas besar</li>
+                                        <li><span class="status-active">Stabilitas</span> - Platform yang sudah matang</li>
+                                        <li><span class="status-active">Pin Mapping Sederhana</span> - Tidak ada boot pins</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>❌ Keterbatasan Arduino Uno + WiFi01</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-failed">Single Core</span> - 16MHz, performa terbatas</li>
+                                        <li><span class="status-failed">RAM 2KB</span> - Memori sangat terbatas</li>
+                                        <li><span class="status-failed">GPIO 14 Pins</span> - Pin I/O sedikit</li>
+                                        <li><span class="status-failed">ADC 6 Channel</span> - Input analog terbatas</li>
+                                        <li><span class="status-failed">Tidak Ada DAC</span> - Tidak ada output analog</li>
+                                        <li><span class="status-failed">Biaya Lebih Tinggi</span> - ~$15-20 total</li>
+                                        <li><span class="status-failed">Konsumsi Daya Tinggi</span> - Tidak efisien untuk IoT</li>
+                                        <li><span class="status-failed">Koneksi Serial</span> - Komunikasi terbatas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h3>Perbandingan Teknis Detail</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>Spesifikasi Hardware</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">ESP32</span> - Dual-core 240MHz, 520KB RAM</li>
+                                        <li><span class="status-active">Arduino Uno</span> - Single-core 16MHz, 2KB RAM</li>
+                                        <li><span class="status-active">ESP32</span> - 34 GPIO pins, 18 ADC channels</li>
+                                        <li><span class="status-active">Arduino Uno</span> - 14 GPIO pins, 6 ADC channels</li>
+                                        <li><span class="status-active">ESP32</span> - WiFi & Bluetooth built-in</li>
+                                        <li><span class="status-active">Arduino Uno</span> - Perlu modul WiFi eksternal</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Kebutuhan Proyek IoT</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Real-time Processing</span> - ESP32 lebih cepat</li>
+                                        <li><span class="status-active">Multiple Tasks</span> - ESP32 dual-core</li>
+                                        <li><span class="status-active">Memory Management</span> - ESP32 lebih besar</li>
+                                        <li><span class="status-active">Network Handling</span> - ESP32 built-in WiFi</li>
+                                        <li><span class="status-active">Power Efficiency</span> - ESP32 lebih efisien</li>
+                                        <li><span class="status-active">Cost Effectiveness</span> - ESP32 lebih murah</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <h3>Alasan Pemilihan ESP32 untuk Proyek Ini</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>Kebutuhan Sistem Lampu Lalu Lintas</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">State Machine Complex</span> - Perlu dual-core processing</li>
+                                        <li><span class="status-active">Real-time Communication</span> - MQTT dan WiFi simultan</li>
+                                        <li><span class="status-active">Multiple LED Control</span> - 12 LED dengan timing presisi</li>
+                                        <li><span class="status-active">Data Logging</span> - Memory untuk menyimpan data</li>
+                                        <li><span class="status-active">Web Server</span> - Built-in WiFi untuk web interface</li>
+                                        <li><span class="status-active">Future Scalability</span> - Mudah ditambah sensor</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>Keunggulan untuk Pembelajaran</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Modern IoT Platform</span> - Teknologi terkini</li>
+                                        <li><span class="status-active">Industry Standard</span> - Digunakan industri</li>
+                                        <li><span class="status-active">Advanced Features</span> - Bluetooth, deep sleep</li>
+                                        <li><span class="status-active">Cost Effective</span> - Harga terjangkau</li>
+                                        <li><span class="status-active">Community Support</span> - Dokumentasi lengkap</li>
+                                        <li><span class="status-active">Career Relevance</span> - Skill yang dicari industri</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-notice">
+                        <div class="notice-icon">💡</div>
+                        <div class="notice-content">
+                            <h4>Kesimpulan Pemilihan</h4>
+                            <p>ESP32 dipilih karena <strong>performa superior, fitur built-in WiFi, harga terjangkau, dan skalabilitas tinggi</strong> yang sesuai dengan kebutuhan proyek IoT Lampu Lalu Lintas. Meskipun Arduino Uno + WiFi01 lebih mudah digunakan, ESP32 memberikan nilai lebih untuk pembelajaran IoT modern dan implementasi sistem yang kompleks.</p>
                         </div>
                     </div>
                 </div>
