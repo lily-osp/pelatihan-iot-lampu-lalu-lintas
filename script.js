@@ -231,86 +231,100 @@ document.addEventListener('DOMContentLoaded', function() {
     // Traffic light logic data with correct implementation from actual Arduino code
     const trafficLogic = {
         twoWay: {
-            name: "Jalan Lurus 2 Arah",
-            headers: ['State', 'Arah 1', 'Arah 2', 'Durasi (detik)', 'Keterangan'],
+            name: "Perempatan 2 Set (dengan Fase Belok)",
+            headers: ['State', 'Utara', 'Selatan', 'Durasi (detik)', 'Keterangan'],
             rows: [
-                [1, 'Hijau', 'Merah', 20, 'Arah 1 Hijau, Arah 2 Merah'],
-                [2, 'Kuning', 'Merah', 3, 'Arah 1 Kuning, Arah 2 Merah'],
-                [3, 'Merah', 'Merah', 2, 'Kedua Arah Merah (Transisi)'],
-                [4, 'Merah', 'Hijau', 20, 'Arah 1 Merah, Arah 2 Hijau'],
-                [5, 'Merah', 'Kuning', 3, 'Arah 1 Merah, Arah 2 Kuning'],
-                [6, 'Merah', 'Merah', 2, 'Kedua Arah Merah (Transisi)']
+                [1, 'Hijau', 'Hijau', 15, 'Lurus: Utara & Selatan Hijau'],
+                [2, 'Kuning', 'Kuning', 3, 'Lurus: Utara & Selatan Kuning'],
+                [3, 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [4, 'Hijau', 'Merah', 8, 'Belok: Utara Hijau, Selatan Merah'],
+                [5, 'Kuning', 'Merah', 3, 'Belok: Utara Kuning, Selatan Merah'],
+                [6, 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [7, 'Merah', 'Hijau', 8, 'Belok: Utara Merah, Selatan Hijau'],
+                [8, 'Merah', 'Kuning', 3, 'Belok: Utara Merah, Selatan Kuning'],
+                [9, 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [10, 'Kuning*', 'Kuning*', 20, 'Emergency Mode: Blinking Yellow'],
+                [11, 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
             ],
             info: {
-                totalCycle: "~50 detik",
-                stateCount: "6 states",
-                maxGreen: "20 detik",
+                totalCycle: "~60 detik",
+                stateCount: "11 states",
+                maxGreen: "15 detik",
                 transitionTime: "2 detik"
             }
         },
         yShape: {
             name: "Pertigaan Y-Shape",
-            headers: ['State', 'Jalur Utama', 'Cabang 1', 'Cabang 2', 'Durasi (detik)', 'Keterangan'],
+            headers: ['State', 'Utara', 'Selatan', 'Timur', 'Durasi (detik)', 'Keterangan'],
             rows: [
-                [1, 'Hijau', 'Merah', 'Merah', 30, 'Jalur Utama Hijau, Cabang 1 & 2 Merah'],
-                [2, 'Kuning', 'Merah', 'Merah', 4, 'Jalur Utama Kuning, Cabang 1 & 2 Merah'],
+                [1, 'Hijau', 'Merah', 'Merah', 15, 'Utara Hijau, Selatan & Timur Merah'],
+                [2, 'Kuning', 'Merah', 'Merah', 3, 'Utara Kuning, Selatan & Timur Merah'],
                 [3, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [4, 'Merah', 'Hijau', 'Merah', 25, 'Cabang 1 Hijau, Jalur Utama & Cabang 2 Merah'],
-                [5, 'Merah', 'Kuning', 'Merah', 4, 'Cabang 1 Kuning, Jalur Utama & Cabang 2 Merah'],
+                [4, 'Merah', 'Hijau', 'Merah', 15, 'Selatan Hijau, Utara & Timur Merah'],
+                [5, 'Merah', 'Kuning', 'Merah', 3, 'Selatan Kuning, Utara & Timur Merah'],
                 [6, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [7, 'Merah', 'Merah', 'Hijau', 25, 'Cabang 2 Hijau, Jalur Utama & Cabang 1 Merah'],
-                [8, 'Merah', 'Merah', 'Kuning', 4, 'Cabang 2 Kuning, Jalur Utama & Cabang 1 Merah'],
-                [9, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)']
+                [7, 'Merah', 'Merah', 'Hijau', 15, 'Timur Hijau, Utara & Selatan Merah'],
+                [8, 'Merah', 'Merah', 'Kuning', 3, 'Timur Kuning, Utara & Selatan Merah'],
+                [9, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [10, 'Kuning*', 'Kuning*', 'Kuning*', 20, 'Emergency Mode: Blinking Yellow'],
+                [11, 'Merah', 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
             ],
             info: {
-                totalCycle: "~120 detik",
-                stateCount: "9 states",
-                maxGreen: "30 detik",
+                totalCycle: "~80 detik",
+                stateCount: "11 states",
+                maxGreen: "15 detik",
                 transitionTime: "2 detik"
             }
         },
         tShape: {
             name: "Pertigaan T-Shape",
-            headers: ['State', 'Main Road', 'Side Road', 'Left Turn', 'Durasi (detik)', 'Keterangan'],
+            headers: ['State', 'Utara', 'Selatan', 'Timur', 'Durasi (detik)', 'Keterangan'],
             rows: [
-                [1, 'Hijau', 'Merah', 'Merah', 35, 'Main Road Hijau, Side Road & Left Turn Merah'],
-                [2, 'Kuning', 'Merah', 'Merah', 4, 'Main Road Kuning, Side Road & Left Turn Merah'],
+                [1, 'Hijau', 'Hijau', 'Merah', 20, 'Main Road: Utara & Selatan Hijau, Timur Merah'],
+                [2, 'Kuning', 'Kuning', 'Merah', 3, 'Main Road: Utara & Selatan Kuning, Timur Merah'],
                 [3, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [4, 'Merah', 'Hijau', 'Merah', 20, 'Side Road Hijau, Main Road & Left Turn Merah'],
-                [5, 'Merah', 'Kuning', 'Merah', 4, 'Side Road Kuning, Main Road & Left Turn Merah'],
+                [4, 'Merah', 'Merah', 'Hijau', 20, 'Side Road: Timur Hijau, Utara & Selatan Merah'],
+                [5, 'Merah', 'Merah', 'Kuning', 3, 'Side Road: Timur Kuning, Utara & Selatan Merah'],
                 [6, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [7, 'Merah', 'Merah', 'Hijau', 15, 'Left Turn Hijau, Main Road & Side Road Merah'],
-                [8, 'Merah', 'Merah', 'Kuning', 4, 'Left Turn Kuning, Main Road & Side Road Merah'],
-                [9, 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)']
+                [7, 'Kuning*', 'Kuning*', 'Kuning*', 20, 'Emergency Mode: Blinking Yellow'],
+                [8, 'Merah', 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
             ],
             info: {
-                totalCycle: "~100 detik",
-                stateCount: "9 states",
-                maxGreen: "35 detik",
+                totalCycle: "~70 detik",
+                stateCount: "8 states",
+                maxGreen: "20 detik",
                 transitionTime: "2 detik"
             }
         },
         fourWay: {
-            name: "Perempatan Lengkap",
+            name: "Perempatan 4 Arah (IoT Version)",
             headers: ['State', 'Utara', 'Selatan', 'Timur', 'Barat', 'Durasi (detik)', 'Keterangan'],
             rows: [
-                [1, 'Hijau', 'Hijau', 'Merah', 'Merah', 30, 'Utara & Selatan Hijau, Timur & Barat Merah'],
-                [2, 'Kuning', 'Kuning', 'Merah', 'Merah', 4, 'Utara & Selatan Kuning, Timur & Barat Merah'],
+                [1, 'Hijau', 'Hijau', 'Merah', 'Merah', 20, 'Utara & Selatan Hijau, Timur & Barat Merah'],
+                [2, 'Kuning', 'Kuning', 'Merah', 'Merah', 3, 'Utara & Selatan Kuning, Timur & Barat Merah'],
                 [3, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
-                [4, 'Merah', 'Merah', 'Hijau', 'Hijau', 25, 'Timur & Barat Hijau, Utara & Selatan Merah'],
-                [5, 'Merah', 'Merah', 'Kuning', 'Kuning', 4, 'Timur & Barat Kuning, Utara & Selatan Merah'],
+                [4, 'Merah', 'Merah', 'Hijau', 'Hijau', 20, 'Timur & Barat Hijau, Utara & Selatan Merah'],
+                [5, 'Merah', 'Merah', 'Kuning', 'Kuning', 3, 'Timur & Barat Kuning, Utara & Selatan Merah'],
                 [6, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
                 [7, 'Hijau', 'Merah', 'Merah', 'Merah', 10, 'Individual: Utara Hijau (Belok Kanan)'],
-                [8, 'Merah', 'Merah', 'Hijau', 'Merah', 10, 'Individual: Timur Hijau (Belok Kanan)'],
-                [9, 'Merah', 'Hijau', 'Merah', 'Merah', 10, 'Individual: Selatan Hijau (Belok Kanan)'],
-                [10, 'Merah', 'Merah', 'Merah', 'Hijau', 10, 'Individual: Barat Hijau (Belok Kanan)'],
-                [11, 'Kuning*', 'Kuning*', 'Kuning*', 'Kuning*', 5, 'Emergency Mode: Blinking Yellow'],
-                [12, 'Merah', 'Merah', 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
+                [8, 'Kuning', 'Merah', 'Merah', 'Merah', 3, 'Individual: Utara Kuning'],
+                [9, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [10, 'Merah', 'Merah', 'Hijau', 'Merah', 10, 'Individual: Timur Hijau (Belok Kanan)'],
+                [11, 'Merah', 'Merah', 'Kuning', 'Merah', 3, 'Individual: Timur Kuning'],
+                [12, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [13, 'Merah', 'Hijau', 'Merah', 'Merah', 10, 'Individual: Selatan Hijau (Belok Kanan)'],
+                [14, 'Merah', 'Kuning', 'Merah', 'Merah', 3, 'Individual: Selatan Kuning'],
+                [15, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [16, 'Merah', 'Merah', 'Merah', 'Hijau', 10, 'Individual: Barat Hijau (Belok Kanan)'],
+                [17, 'Merah', 'Merah', 'Merah', 'Kuning', 3, 'Individual: Barat Kuning'],
+                [18, 'Merah', 'Merah', 'Merah', 'Merah', 2, 'Semua Merah (Transisi)'],
+                [19, 'Kuning*', 'Kuning*', 'Kuning*', 'Kuning*', 20, 'Emergency Mode: Blinking Yellow'],
+                [20, 'Merah', 'Merah', 'Merah', 'Merah', 15, 'Pedestrian Mode: Semua Merah']
             ],
             info: {
                 totalCycle: "~180 detik",
-                stateCount: "12 states",
-                maxGreen: "30 detik",
+                stateCount: "20 states",
+                maxGreen: "20 detik",
                 transitionTime: "2 detik"
             }
         }
@@ -390,10 +404,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    indexAxis: 'y', // This makes it horizontal
                     scales: {
-                        y: {
+                        x: {
                             beginAtZero: true,
                             title: { display: true, text: 'Durasi (detik)' }
+                        },
+                        y: {
+                            title: { display: true, text: 'State' }
                         }
                     },
                     plugins: { 
@@ -401,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `Durasi: ${context.parsed.y} detik`;
+                                    return `Durasi: ${context.parsed.x} detik`;
                                 }
                             }
                         }
@@ -435,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
     btn2Way.addEventListener('click', function() {
         updateTrafficLogic('twoWay');
         updateButtonStates(btn2Way);
-        showToast('success', 'Jalan Lurus 2 Arah dipilih!');
+        showToast('success', 'Perempatan 2 Set dipilih!');
     });
     
     btnYShape.addEventListener('click', function() {
@@ -453,13 +471,14 @@ document.addEventListener('DOMContentLoaded', function() {
     btn4Way.addEventListener('click', function() {
         updateTrafficLogic('fourWay');
         updateButtonStates(btn4Way);
-        showToast('success', 'Perempatan Lengkap dipilih!');
+        showToast('success', 'Perempatan 4 Arah (IoT) dipilih!');
     });
 
 
 
     // Initialize everything
-    updateTrafficLogic('twoWay');
+    updateTrafficLogic('yShape');
+    updateButtonStates(btnYShape);
 
     // Show a demo toast on load
     setTimeout(() => showToast('success', 'Selamat datang di platform IoT Lampu Lalu Lintas!'), 500);

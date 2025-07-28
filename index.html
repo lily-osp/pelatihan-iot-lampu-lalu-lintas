@@ -893,7 +893,7 @@
                         <button type="button" id="btnYShape" class="pattern-btn active">Pertigaan Y</button>
                         <button type="button" id="btnTShape" class="pattern-btn">Pertigaan T</button>
                         <button type="button" id="btn2Way" class="pattern-btn">Perempatan 2 Set</button>
-                        <button type="button" id="btn4Way" class="pattern-btn">Perempatan 4 Set</button>
+                        <button type="button" id="btn4Way" class="pattern-btn">Perempatan 4 Arah (IoT)</button>
                     </div>
                     
                     <div class="logic-display">
@@ -939,8 +939,8 @@
                     <div class="emergency-notice">
                         <div class="notice-icon">🚨</div>
                         <div class="notice-content">
-                            <h4>Pembaruan Mode Darurat</h4>
-                            <p>Semua sistem sekarang menggunakan <strong>lampu kuning berkedip</strong> untuk mode darurat alih-alih lampu merah solid, mengikuti standar lampu lalu lintas internasional untuk pembedaan visual yang lebih baik.</p>
+                            <h4>Fitur IoT Perempatan 4 Arah</h4>
+                            <p>Sistem IoT perempatan 4 arah memiliki <strong>20 states lengkap</strong> dengan fitur save state, mode darurat 20 detik (kuning berkedip), mode pejalan kaki 15 detik, dan monitoring real-time melalui Adafruit IO. Timing yang realistis: 20s hijau utama, 10s hijau individual, 3s kuning, 2s transisi merah.</p>
                         </div>
                     </div>
                 </div>
@@ -953,12 +953,13 @@
                         <h3>Integrasi MQTT & Cloud</h3>
                     </div>
                     <div class="card-content">
-                        <h4>Struktur Topik MQTT</h4>
+                        <h4>Struktur Topik MQTT (Adafruit IO)</h4>
                         <div class="topic-list">
-                            <div class="topic-item">📡 traffic-light/status - Status real-time</div>
-                            <div class="topic-item">📡 traffic-light/control - Kontrol manual</div>
-                            <div class="topic-item">📡 traffic-light/data - Data JSON lengkap</div>
-                            <div class="topic-item">📡 traffic-light/error - Notifikasi error</div>
+                            <div class="topic-item">📡 traffic-status - Status real-time lampu lalu lintas</div>
+                            <div class="topic-item">📡 traffic-state - State machine numerik (0-20)</div>
+                            <div class="topic-item">📡 traffic-data - Data JSON lengkap dengan timestamp</div>
+                            <div class="topic-item">📡 traffic-uptime - Uptime sistem (30 detik interval)</div>
+                            <div class="topic-item">📡 traffic-mode - Mode sistem (Normal/Emergency/Pedestrian)</div>
                         </div>
                     </div>
                 </div>
@@ -970,11 +971,131 @@
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
-                            <li><span class="status-active">Monitoring real-time</span> - Status lampu lalu lintas langsung</li>
-                            <li><span class="status-active">Data historis</span> - Analisis pola lalu lintas</li>
-                            <li><span class="status-active">Interface kontrol</span> - Kemampuan override manual</li>
-                            <li><span class="status-active">Sistem alert</span> - Notifikasi error</li>
+                            <li><span class="status-active">Real-time Monitoring</span> - Status lampu lalu lintas langsung</li>
+                            <li><span class="status-active">State Machine Tracking</span> - Pantau 20 states dengan durasi</li>
+                            <li><span class="status-active">JSON Data Logging</span> - Data lengkap dengan timestamp</li>
+                            <li><span class="status-active">Uptime Monitoring</span> - Sistem uptime setiap 30 detik</li>
+                            <li><span class="status-active">Mode Detection</span> - Normal/Emergency/Pedestrian modes</li>
+                            <li><span class="status-active">Save State Feature</span> - Resume dari state terakhir</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔌</div>
+                    <h3>Pinout & Koneksi Hardware</h3>
+                </div>
+                <div class="card-content">
+                    <div class="pinout-grid">
+                        <div class="pinout-section">
+                            <h4>🟢 LED Traffic Lights</h4>
+                            <div class="pin-list">
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 23</span>
+                                    <span class="pin-label">North Green</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 22</span>
+                                    <span class="pin-label">North Yellow</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 21</span>
+                                    <span class="pin-label">North Red</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 19</span>
+                                    <span class="pin-label">East Green</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 18</span>
+                                    <span class="pin-label">East Yellow</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 5</span>
+                                    <span class="pin-label">East Red</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 4</span>
+                                    <span class="pin-label">South Green</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 2</span>
+                                    <span class="pin-label">South Yellow</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 15</span>
+                                    <span class="pin-label">South Red</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 0</span>
+                                    <span class="pin-label">West Green</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 16</span>
+                                    <span class="pin-label">West Yellow</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 17</span>
+                                    <span class="pin-label">West Red</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pinout-section">
+                            <h4>🔘 Push Buttons</h4>
+                            <div class="pin-list">
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 13</span>
+                                    <span class="pin-label">Emergency Button</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">GPIO 14</span>
+                                    <span class="pin-label">Pedestrian Button</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pinout-section">
+                            <h4>📡 WiFi & IoT</h4>
+                            <div class="pin-list">
+                                <div class="pin-item">
+                                    <span class="pin-number">Built-in</span>
+                                    <span class="pin-label">WiFi Module</span>
+                                </div>
+                                <div class="pin-item">
+                                    <span class="pin-number">Built-in</span>
+                                    <span class="pin-label">MQTT Client</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="connection-guide">
+                        <h4>📋 Panduan Koneksi</h4>
+                        <div class="connection-steps">
+                            <div class="connection-step">
+                                <span class="step-number">1</span>
+                                <p>Hubungkan LED ke GPIO sesuai pinout di atas</p>
+                            </div>
+                            <div class="connection-step">
+                                <span class="step-number">2</span>
+                                <p>Gunakan resistor 220Ω untuk setiap LED</p>
+                            </div>
+                            <div class="connection-step">
+                                <span class="step-number">3</span>
+                                <p>Hubungkan push button ke GPIO 13 dan 14</p>
+                            </div>
+                            <div class="connection-step">
+                                <span class="step-number">4</span>
+                                <p>Pastikan ground (GND) terhubung ke semua komponen</p>
+                            </div>
+                            <div class="connection-step">
+                                <span class="step-number">5</span>
+                                <p>Konfigurasi WiFi credentials di kode Arduino</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -803,7 +803,7 @@ p {
 }
 
 .chart-wrapper {
-    height: 350px;
+    height: 600px;
     position: relative;
 }
 
@@ -879,6 +879,119 @@ p {
 .notice-content p {
     color: var(--warning-700);
     margin: 0;
+}
+
+/* --- Pinout & Connection Card --- */
+.pinout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-6);
+}
+
+.pinout-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.pinout-section h4 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--neutral-900);
+    margin-bottom: var(--spacing-3);
+    text-align: center;
+}
+
+.pin-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.pin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) var(--spacing-3);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.pin-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    transform: translateX(2px);
+}
+
+.pin-number {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: var(--primary-600);
+    background: var(--primary-100);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.pin-label {
+    font-weight: 500;
+    color: var(--neutral-700);
+}
+
+.connection-guide {
+    background: var(--success-50);
+    border: 1px solid var(--success-200);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    margin-top: var(--spacing-6);
+}
+
+.connection-guide h4 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--success-800);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+}
+
+.connection-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.connection-step {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--success-200);
+}
+
+.connection-step .step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--success-500);
+    color: white;
+    border-radius: 50%;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.connection-step p {
+    margin: 0;
+    color: var(--success-700);
+    font-weight: 500;
 }
 
 /* --- Simulation Grid --- */
