@@ -8,9 +8,9 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **IoT** deng
 | File | Jenis Intersection | LED | Pin | Durasi Siklus | IoT Features |
 |------|-------------------|-----|-----|---------------|--------------|
 | `2set.ino` | Jalan Lurus 2 Arah | 6 | 6 | ~50 detik | ✅ |
-| `pertigaan_y.ino` | Pertigaan Y-Shape | 9 | 9 | ~120 detik | ✅ |
-| `pertigaan_t.ino` | Pertigaan T-Shape | 9 | 9 | ~100 detik | ✅ |
-| `perempatan.ino` | Perempatan Lengkap | 12 | 12 | ~180 detik | ✅ |
+| `pertigaan_y.ino` | Pertigaan Y-Shape | 9 | 9 | ~60 detik | ✅ |
+| `pertigaan_t.ino` | Pertigaan T-Shape | 9 | 9 | ~50 detik | ✅ |
+| `perempatan.ino` | Perempatan Lengkap | 12 | 12 | ~120 detik | ✅ |
 
 ## 🔧 Komponen Hardware
 
@@ -21,6 +21,7 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **IoT** deng
 - **Breadboard** (1 unit)
 - **Kabel Jumper** (sesuai kebutuhan)
 - **Koneksi WiFi** (wajib)
+- **2x Push Button** (untuk emergency & pedestrian mode)
 
 ### Software Requirements
 - **Arduino IDE** dengan ESP32 board package
@@ -33,7 +34,7 @@ Folder ini berisi implementasi sistem lampu lalu lintas ESP32 versi **IoT** deng
 | Fitur | Deskripsi | Data Type |
 |-------|-----------|-----------|
 | **Real-time Status** | Status lampu saat ini | String |
-| **State Number** | Nomor state (0-11) | Integer |
+| **State Number** | Nomor state (0-18) | Integer |
 | **Uptime** | Waktu operasi sistem | Integer (detik) |
 | **JSON Data** | Data lengkap dalam JSON | JSON String |
 | **Mode Status** | Emergency/Pedestrian mode | String |
@@ -49,102 +50,117 @@ YOUR_AIO_USERNAME/feeds/traffic-mode
 
 ## 📋 Detail Sistem
 
-### 1. 🛣️ **2set.ino** - Jalan Lurus 2 Arah
+### 1. 🛣️ **2set.ino** - Jalan Lurus 2 Arah (dengan Fase Belok)
 
-#### Koneksi Hardware (Sama dengan Basic)
+#### Koneksi Hardware
 | Pin ESP32 | LED | Arah |
 |-----------|-----|------|
-| D23 | Hijau | Arah 1 |
-| D22 | Kuning | Arah 1 |
-| D21 | Merah | Arah 1 |
-| D19 | Hijau | Arah 2 |
-| D18 | Kuning | Arah 2 |
-| D5 | Merah | Arah 2 |
+| D23 | Hijau | Utara |
+| D22 | Kuning | Utara |
+| D21 | Merah | Utara |
+| D19 | Hijau | Selatan |
+| D18 | Kuning | Selatan |
+| D5 | Merah | Selatan |
+| D25 | Tombol | Emergency |
+| D26 | Tombol | Pedestrian |
 
-#### State Machine (6 States)
-| State | Arah 1 | Arah 2 | Durasi | IoT Data |
-|-------|--------|--------|--------|----------|
-| 1 | 🟢 Hijau | 🔴 Merah | 20 detik | "State 1" |
-| 2 | 🟡 Kuning | 🔴 Merah | 3 detik | "State 2" |
-| 3 | 🔴 Merah | 🔴 Merah | 2 detik | "State 3" |
-| 4 | 🔴 Merah | 🟢 Hijau | 20 detik | "State 4" |
-| 5 | 🔴 Merah | 🟡 Kuning | 3 detik | "State 5" |
-| 6 | 🔴 Merah | 🔴 Merah | 2 detik | "State 6" |
+#### State Machine (11 States)
+| State | Utara | Selatan | Durasi | IoT Data |
+|-------|-------|---------|--------|----------|
+| 1 | 🟢 Hijau | 🟢 Hijau | 15 detik | "Hijau Lurus (Utara & Selatan)" |
+| 2 | 🟡 Kuning | 🟡 Kuning | 3 detik | "Kuning (Utara & Selatan)" |
+| 3 | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 4 | 🟢 Hijau | 🔴 Merah | 8 detik | "Hijau Belok (Utara)" |
+| 5 | 🟡 Kuning | 🔴 Merah | 3 detik | "Kuning (Utara)" |
+| 6 | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 7 | 🔴 Merah | 🟢 Hijau | 8 detik | "Hijau Belok (Selatan)" |
+| 8 | 🔴 Merah | 🟡 Kuning | 3 detik | "Kuning (Selatan)" |
+| 9 | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 10 | Emergency | Blinking | 20 detik | "Mode Darurat" |
+| 11 | Pedestrian | All Red | 15 detik | "Mode Pejalan Kaki" |
 
 #### IoT Features
 - **Status Update**: Setiap state change
 - **Uptime Logging**: Setiap 30 detik
 - **JSON Data**: Timestamp, state, duration, direction
+- **Mode Tracking**: Emergency/Pedestrian status
 
 ### 2. 🔀 **pertigaan_y.ino** - Pertigaan Y-Shape
 
-#### Koneksi Hardware (Sama dengan Basic)
+#### Koneksi Hardware
 | Pin ESP32 | LED | Jalur |
 |-----------|-----|-------|
-| D23 | Hijau | Jalur Utama |
-| D22 | Kuning | Jalur Utama |
-| D21 | Merah | Jalur Utama |
-| D19 | Hijau | Cabang 1 |
-| D18 | Kuning | Cabang 1 |
-| D5 | Merah | Cabang 1 |
-| D4 | Hijau | Cabang 2 |
-| D2 | Kuning | Cabang 2 |
-| D15 | Merah | Cabang 2 |
+| D23 | Hijau | Utara |
+| D22 | Kuning | Utara |
+| D21 | Merah | Utara |
+| D19 | Hijau | Selatan |
+| D18 | Kuning | Selatan |
+| D5 | Merah | Selatan |
+| D4 | Hijau | Timur |
+| D2 | Kuning | Timur |
+| D15 | Merah | Timur |
+| D25 | Tombol | Emergency |
+| D26 | Tombol | Pedestrian |
 
-#### State Machine (9 States)
-| State | Jalur Utama | Cabang 1 | Cabang 2 | Durasi | IoT Data |
-|-------|-------------|----------|----------|--------|----------|
-| 1 | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 30 detik | "State 1" |
-| 2 | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 4 detik | "State 2" |
-| 3 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 3" |
-| 4 | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 25 detik | "State 4" |
-| 5 | 🔴 Merah | 🟡 Kuning | 🔴 Merah | 4 detik | "State 5" |
-| 6 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 6" |
-| 7 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 25 detik | "State 7" |
-| 8 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 4 detik | "State 8" |
-| 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 9" |
+#### State Machine (11 States)
+| State | Utara | Selatan | Timur | Durasi | IoT Data |
+|-------|-------|---------|-------|--------|----------|
+| 1 | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 15 detik | "Utara Hijau" |
+| 2 | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 3 detik | "Utara Kuning" |
+| 3 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 4 | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 15 detik | "Selatan Hijau" |
+| 5 | 🔴 Merah | 🟡 Kuning | 🔴 Merah | 3 detik | "Selatan Kuning" |
+| 6 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 7 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 15 detik | "Timur Hijau" |
+| 8 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 3 detik | "Timur Kuning" |
+| 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 10 | Emergency | Blinking | Blinking | 20 detik | "Mode Darurat" |
+| 11 | Pedestrian | All Red | All Red | 15 detik | "Mode Pejalan Kaki" |
 
 #### IoT Features
-- **Direction Tracking**: "jalur_utama", "cabang_1", "cabang_2"
+- **Direction Tracking**: "utara", "selatan", "timur"
 - **Status Monitoring**: "hijau", "kuning", "merah"
 - **Type Identification**: "y_shape"
+- **Save State**: Menyimpan state sebelum interupsi
 
 ### 3. 🔀 **pertigaan_t.ino** - Pertigaan T-Shape
 
-#### Koneksi Hardware (Sama dengan Basic)
+#### Koneksi Hardware
 | Pin ESP32 | LED | Jalur |
 |-----------|-----|-------|
-| D23 | Hijau | Main Road |
-| D22 | Kuning | Main Road |
-| D21 | Merah | Main Road |
-| D19 | Hijau | Side Road |
-| D18 | Kuning | Side Road |
-| D5 | Merah | Side Road |
-| D4 | Hijau | Left Turn |
-| D2 | Kuning | Left Turn |
-| D15 | Merah | Left Turn |
+| D23 | Hijau | Utara-Selatan |
+| D22 | Kuning | Utara-Selatan |
+| D21 | Merah | Utara-Selatan |
+| D19 | Hijau | Timur |
+| D18 | Kuning | Timur |
+| D5 | Merah | Timur |
+| D4 | Hijau | Barat |
+| D2 | Kuning | Barat |
+| D15 | Merah | Barat |
+| D25 | Tombol | Emergency |
+| D26 | Tombol | Pedestrian |
 
-#### State Machine (9 States)
-| State | Main Road | Side Road | Left Turn | Durasi | IoT Data |
-|-------|-----------|-----------|-----------|--------|----------|
-| 1 | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 35 detik | "State 1" |
-| 2 | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 4 detik | "State 2" |
-| 3 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 3" |
-| 4 | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 20 detik | "State 4" |
-| 5 | 🔴 Merah | 🟡 Kuning | 🔴 Merah | 4 detik | "State 5" |
-| 6 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 6" |
-| 7 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 15 detik | "State 7" |
-| 8 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 4 detik | "State 8" |
-| 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 9" |
+#### State Machine (8 States)
+| State | Utara-Selatan | Timur | Durasi | IoT Data |
+|-------|---------------|-------|--------|----------|
+| 1 | 🟢 Hijau | 🔴 Merah | 20 detik | "Utara-Selatan Hijau" |
+| 2 | 🟡 Kuning | 🔴 Merah | 3 detik | "Utara-Selatan Kuning" |
+| 3 | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 4 | 🔴 Merah | 🟢 Hijau | 20 detik | "Timur Hijau" |
+| 5 | 🔴 Merah | 🟡 Kuning | 3 detik | "Timur Kuning" |
+| 6 | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 7 | Emergency | Blinking | Blinking | 20 detik | "Mode Darurat" |
+| 8 | Pedestrian | All Red | All Red | 15 detik | "Mode Pejalan Kaki" |
 
 #### IoT Features
-- **Direction Tracking**: "main_road", "side_road", "left_turn"
+- **Direction Tracking**: "utara_selatan", "timur"
 - **Priority Logic**: Main road gets longer green time
 - **Type Identification**: "t_shape"
+- **Save State**: Menyimpan state sebelum interupsi
 
 ### 4. 🚦 **perempatan.ino** - Perempatan Lengkap
 
-#### Koneksi Hardware (Sama dengan Basic)
+#### Koneksi Hardware
 | Pin ESP32 | LED | Arah |
 |-----------|-----|------|
 | D23 | Hijau | Utara |
@@ -159,27 +175,38 @@ YOUR_AIO_USERNAME/feeds/traffic-mode
 | D0 | Hijau | Barat |
 | D16 | Kuning | Barat |
 | D17 | Merah | Barat |
+| D25 | Tombol | Emergency |
+| D26 | Tombol | Pedestrian |
 
-#### State Machine (12 States)
+#### State Machine (20 States)
 | State | Utara | Selatan | Timur | Barat | Durasi | IoT Data |
 |-------|-------|---------|-------|-------|--------|----------|
-| 1 | 🟢 Hijau | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 30 detik | "State 1" |
-| 2 | 🟡 Kuning | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 4 detik | "State 2" |
-| 3 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 3" |
-| 4 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 🟢 Hijau | 25 detik | "State 4" |
-| 5 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 🟡 Kuning | 4 detik | "State 5" |
-| 6 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "State 6" |
-| 7 | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 🔴 Merah | 10 detik | "State 7" |
-| 8 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 10 detik | "State 8" |
-| 9 | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 10 detik | "State 9" |
-| 10 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 10 detik | "State 10" |
-| 11 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 5 detik | "Emergency" |
-| 12 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 15 detik | "Pedestrian" |
+| 1 | 🟢 Hijau | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 20 detik | "Utara-Selatan Hijau" |
+| 2 | 🟡 Kuning | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 3 detik | "Utara-Selatan Kuning" |
+| 3 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 4 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 🟢 Hijau | 20 detik | "Timur-Barat Hijau" |
+| 5 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 🟡 Kuning | 3 detik | "Timur-Barat Kuning" |
+| 6 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 7 | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 🔴 Merah | 10 detik | "Utara Individual" |
+| 8 | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 🔴 Merah | 3 detik | "Utara Kuning" |
+| 9 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 10 | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 10 detik | "Timur Individual" |
+| 11 | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 🔴 Merah | 3 detik | "Timur Kuning" |
+| 12 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 13 | 🔴 Merah | 🟢 Hijau | 🔴 Merah | 🔴 Merah | 10 detik | "Selatan Individual" |
+| 14 | 🔴 Merah | 🟡 Kuning | 🔴 Merah | 🔴 Merah | 3 detik | "Selatan Kuning" |
+| 15 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 16 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🟢 Hijau | 10 detik | "Barat Individual" |
+| 17 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🟡 Kuning | 3 detik | "Barat Kuning" |
+| 18 | 🔴 Merah | 🔴 Merah | 🔴 Merah | 🔴 Merah | 2 detik | "Semua Merah (Transisi)" |
+| 19 | Emergency | Blinking | Blinking | Blinking | 20 detik | "Mode Darurat" |
+| 20 | Pedestrian | All Red | All Red | All Red | 15 detik | "Mode Pejalan Kaki" |
 
 #### IoT Features
 - **Direction Tracking**: "utara_selatan", "timur_barat", "individual"
 - **Mode Monitoring**: "normal", "emergency", "pedestrian"
 - **Type Identification**: "complete"
+- **Save State**: Menyimpan state sebelum interupsi
 
 ## 🚀 Setup dan Konfigurasi
 
@@ -218,15 +245,16 @@ const char* password = "YOUR_WIFI_PASSWORD";
   "timestamp": "1234567890",
   "state": 1,
   "duration": 20000,
-  "direction": "main_road",
+  "direction": "utara_selatan_lurus",
   "status": "hijau",
-  "type": "t_shape"
+  "mode": "normal",
+  "type": "2_way"
 }
 ```
 
 ### Real-time Monitoring
 - **Status**: State lampu saat ini
-- **State Number**: 0-11 (sesuai sistem)
+- **State Number**: 0-20 (sesuai sistem)
 - **Uptime**: Waktu operasi dalam detik
 - **Mode**: Normal/Emergency/Pedestrian
 
@@ -239,12 +267,14 @@ const char* password = "YOUR_WIFI_PASSWORD";
 | MQTT error | Adafruit IO config | Periksa username & key |
 | Data tidak terkirim | Koneksi terputus | Restart ESP32 |
 | JSON error | Format data | Periksa kode JSON |
+| Button tidak respon | Pin salah | Periksa koneksi tombol |
 
 ### Tips IoT
 - **Stable WiFi**: Pastikan sinyal WiFi kuat
 - **MQTT Keep-alive**: Sistem auto-reconnect
 - **Data Validation**: Periksa format JSON
 - **Error Handling**: Monitor Serial untuk error
+- **Button Debouncing**: Implementasi debouncing untuk tombol
 
 ## 📈 Monitoring Dashboard
 

@@ -1,197 +1,329 @@
 /*
- * Proyek Lampu Lalu Lintas - Jalan Lurus (2-way Traffic)
- * ESP32 Basic Version (Non-IoT)
- * 
- * Komponen:
+ * Proyek Lampu Lalu Lintas - Perempatan Jalan Utama & Jalan Kecil (2 Set Lampu)
+ * ESP32 Basic Version (Non-IoT) - VERSI UNTUK KURSUS (DENGAN FASE BELOK)
+ * * Skenario: Jalan utama (Utara-Selatan) yang sibuk bersilangan dengan
+ * jalan kecil. Lampu lalu lintas hanya dipasang di jalan utama.
+ * * Fitur:
+ * - 2 set lampu (Utara & Selatan) untuk mengontrol jalan utama.
+ * - Siklus lengkap: Hijau bersamaan (lurus) & Hijau individual (belok).
+ * - Mode darurat dan pejalan kaki yang berfungsi penuh.
+ * * Komponen:
  * - ESP32 Dev Kit
  * - 6x LED (2x Merah, 2x Kuning, 2x Hijau)
  * - 6x Resistor 220Ω
+ * - 2x Push Button
  * - Breadboard & Kabel Jumper
- * 
- * Koneksi:
- * - Pin D23 -> LED Hijau Arah 1
- * - Pin D22 -> LED Kuning Arah 1  
- * - Pin D21 -> LED Merah Arah 1
- * - Pin D19 -> LED Hijau Arah 2
- * - Pin D18 -> LED Kuning Arah 2
- * - Pin D5  -> LED Merah Arah 2
+ * * Koneksi untuk Lampu (2 Set):
+ * Set 1: Arah Utara
+ * - Pin D23 -> LED Hijau Utara
+ * - Pin D22 -> LED Kuning Utara  
+ * - Pin D21 -> LED Merah Utara
+ * * Set 2: Arah Selatan
+ * - Pin D19 -> LED Hijau Selatan
+ * - Pin D18 -> LED Kuning Selatan
+ * - Pin D5  -> LED Merah Selatan
+ * * Koneksi Tombol:
+ * - Pin D25 -> Tombol Darurat -> GND
+ * - Pin D26 -> Tombol Pejalan Kaki -> GND
  */
 
 // Pin LED - 2 Set Lampu Lalu Lintas
-// Set 1: Arah 1
-const int PIN_LED_HIJAU_ARAH1 = 23;
-const int PIN_LED_KUNING_ARAH1 = 22;
-const int PIN_LED_MERAH_ARAH1 = 21;
+const int PIN_LED_HIJAU_UTARA = 23;
+const int PIN_LED_KUNING_UTARA = 22;
+const int PIN_LED_MERAH_UTARA = 21;
 
-// Set 2: Arah 2
-const int PIN_LED_HIJAU_ARAH2 = 19;
-const int PIN_LED_KUNING_ARAH2 = 18;
-const int PIN_LED_MERAH_ARAH2 = 5;
+// Set 2: Arah Selatan
+const int PIN_LED_HIJAU_SELATAN = 19;
+const int PIN_LED_KUNING_SELATAN = 18;
+const int PIN_LED_MERAH_SELATAN = 5;
 
-// State machine untuk lampu lalu lintas jalan lurus
+// Pin untuk tombol
+const int PIN_TOMBOL_DARURAT = 25;
+const int PIN_TOMBOL_PEDESTRIAN = 26;
+
+// State machine dengan fase belok individual
 enum TrafficState {
-  STATE_1, // Arah 1 Hijau, Arah 2 Merah
-  STATE_2, // Arah 1 Kuning, Arah 2 Merah
-  STATE_3, // Kedua Arah Merah (Transisi)
-  STATE_4, // Arah 1 Merah, Arah 2 Hijau
-  STATE_5, // Arah 1 Merah, Arah 2 Kuning
-  STATE_6  // Kedua Arah Merah (Transisi)
+  STATE_NS_GREEN,   // Fase Lurus
+  STATE_NS_YELLOW,
+  STATE_ALL_RED_1,  // Transisi
+  STATE_N_GREEN,    // Fase Belok Utara
+  STATE_N_YELLOW,
+  STATE_ALL_RED_2,  // Transisi
+  STATE_S_GREEN,    // Fase Belok Selatan
+  STATE_S_YELLOW,
+  STATE_ALL_RED_3,  // Transisi kembali ke awal
+
+  // Mode Khusus
+  STATE_EMERGENCY,
+  STATE_PEDESTRIAN
 };
 
-TrafficState currentState = STATE_1;
+TrafficState currentState = STATE_ALL_RED_3; // Mulai dari state aman
 unsigned long lastStateChange = 0;
 
 // Durasi setiap state (dalam milidetik)
-const unsigned long DURASI_HIJAU_ARAH1 = 20000;   // 20 detik
-const unsigned long DURASI_KUNING = 3000;         // 3 detik
-const unsigned long DURASI_TRANSISI = 2000;       // 2 detik
-const unsigned long DURASI_HIJAU_ARAH2 = 20000;   // 20 detik
+const unsigned long DURASI_HIJAU_LURUS = 15000;      // 15 detik
+const unsigned long DURASI_HIJAU_BELOK = 8000;       // 8 detik
+const unsigned long DURASI_KUNING = 3000;            // 3 detik
+const unsigned long DURASI_TRANSISI_MERAH = 2000;    // 2 detik
+const unsigned long DURASI_EMERGENCY = 20000;        // 20 detik untuk mode darurat
+const unsigned long DURASI_PEDESTRIAN = 15000;       // 15 detik untuk mode pejalan kaki
 
-// Emergency mode variables
+// Mode flags
 bool emergencyMode = false;
+bool pedestrianMode = false;
+
+// Variabel untuk mode darurat (blinking)
 unsigned long lastBlinkTime = 0;
-bool emergencyBlinkState = false;
-const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
+bool emergencyBlinkState = true;
+const unsigned long BLINK_INTERVAL = 500; // interval kedip 500ms
+
+// Variabel untuk debouncing tombol
+unsigned long lastEmergencyDebounceTime = 0;
+unsigned long lastPedestrianDebounceTime = 0;
+unsigned long debounceDelay = 50; // 50ms debounce delay
+
+int lastEmergencyButtonReading = HIGH;
+int emergencyButtonState = HIGH;
+int lastPedestrianButtonReading = HIGH;
+int pedestrianButtonState = HIGH;
+
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("=== Proyek Lampu Lalu Lintas Jalan Lurus (Basic) ===");
+  Serial.println("=== Proyek Lampu Lalu Lintas 2-Arah (dengan Fase Belok) ===");
   
-  // Setup pin LED sebagai output - 2 Set Lampu
-  // Set 1: Arah 1
-  pinMode(PIN_LED_HIJAU_ARAH1, OUTPUT);
-  pinMode(PIN_LED_KUNING_ARAH1, OUTPUT);
-  pinMode(PIN_LED_MERAH_ARAH1, OUTPUT);
+  // Setup pin LED sebagai output
+  pinMode(PIN_LED_HIJAU_UTARA, OUTPUT);
+  pinMode(PIN_LED_KUNING_UTARA, OUTPUT);
+  pinMode(PIN_LED_MERAH_UTARA, OUTPUT);
   
-  // Set 2: Arah 2
-  pinMode(PIN_LED_HIJAU_ARAH2, OUTPUT);
-  pinMode(PIN_LED_KUNING_ARAH2, OUTPUT);
-  pinMode(PIN_LED_MERAH_ARAH2, OUTPUT);
+  pinMode(PIN_LED_HIJAU_SELATAN, OUTPUT);
+  pinMode(PIN_LED_KUNING_SELATAN, OUTPUT);
+  pinMode(PIN_LED_MERAH_SELATAN, OUTPUT);
+
+  // Setup pin tombol sebagai input dengan pull-up internal
+  pinMode(PIN_TOMBOL_DARURAT, INPUT_PULLUP);
+  pinMode(PIN_TOMBOL_PEDESTRIAN, INPUT_PULLUP);
   
-  // Matikan semua LED di awal
-  turnOffAllLights();
-  
-  // Set initial state lights
-  turnOnLights(PIN_LED_HIJAU_ARAH1, PIN_LED_MERAH_ARAH2);
-  
-  Serial.println("Setup selesai. Memulai sistem lampu lalu lintas jalan lurus...");
-  Serial.println("State 1: Arah 1 Hijau, Arah 2 Merah");
+  // Matikan semua LED di awal dan mulai state pertama
+  changeToNextState(); 
+  lastStateChange = millis();
 }
 
 void loop() {
-  // Logika state machine non-blocking
   unsigned long currentTime = millis();
-  
-  // Handle emergency mode blinking
-  if (emergencyMode) {
+
+  // 1. Cek input tombol
+  checkEmergencyButton();
+  checkPedestrianButton();
+
+  // 2. Jalankan logika state machine
+  // Logika khusus untuk blinking saat dalam mode darurat
+  if (currentState == STATE_EMERGENCY) {
     if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
       emergencyBlinkState = !emergencyBlinkState;
       if (emergencyBlinkState) {
-        // Turn on all yellow LEDs
-        turnOnLights(PIN_LED_KUNING_ARAH1, PIN_LED_KUNING_ARAH2);
+        turnOffAllLights();
+        digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+        digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
       } else {
-        // Turn off all LEDs
         turnOffAllLights();
       }
       lastBlinkTime = currentTime;
     }
-    return; // Don't proceed with normal state machine during emergency
   }
-  
+
+  // Logika state machine non-blocking untuk semua siklus
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
     lastStateChange = currentTime;
   }
 }
 
+void checkEmergencyButton() {
+  // Mode darurat memiliki prioritas tertinggi
+  int reading = digitalRead(PIN_TOMBOL_DARURAT);
+
+  if (reading != lastEmergencyButtonReading) {
+    lastEmergencyDebounceTime = millis();
+  }
+
+  if ((millis() - lastEmergencyDebounceTime) > debounceDelay) {
+    if (reading != emergencyButtonState) {
+      emergencyButtonState = reading;
+      if (emergencyButtonState == LOW && !emergencyMode) {
+        activateEmergencyMode();
+      }
+    }
+  }
+  lastEmergencyButtonReading = reading;
+}
+
+void checkPedestrianButton() {
+  if (emergencyMode) return; // Tidak bisa diaktifkan saat darurat
+
+  int reading = digitalRead(PIN_TOMBOL_PEDESTRIAN);
+
+  if (reading != lastPedestrianButtonReading) {
+    lastPedestrianDebounceTime = millis();
+  }
+
+  if ((millis() - lastPedestrianDebounceTime) > debounceDelay) {
+    if (reading != pedestrianButtonState) {
+      pedestrianButtonState = reading;
+      if (pedestrianButtonState == LOW && !pedestrianMode) {
+        activatePedestrianMode();
+      }
+    }
+  }
+  lastPedestrianButtonReading = reading;
+}
+
+
 unsigned long getStateDuration() {
   switch (currentState) {
-    case STATE_1: return DURASI_HIJAU_ARAH1;
-    case STATE_2: return DURASI_KUNING;
-    case STATE_3: return DURASI_TRANSISI;
-    case STATE_4: return DURASI_HIJAU_ARAH2;
-    case STATE_5: return DURASI_KUNING;
-    case STATE_6: return DURASI_TRANSISI;
-    default: return 5000;
+    case STATE_NS_GREEN:  return DURASI_HIJAU_LURUS;
+    case STATE_N_GREEN:   return DURASI_HIJAU_BELOK;
+    case STATE_S_GREEN:   return DURASI_HIJAU_BELOK;
+    case STATE_NS_YELLOW:
+    case STATE_N_YELLOW:
+    case STATE_S_YELLOW:
+      return DURASI_KUNING;
+    case STATE_ALL_RED_1:
+    case STATE_ALL_RED_2:
+    case STATE_ALL_RED_3:
+      return DURASI_TRANSISI_MERAH;
+    case STATE_EMERGENCY:  return DURASI_EMERGENCY;
+    case STATE_PEDESTRIAN: return DURASI_PEDESTRIAN;
+    default: return 2000;
   }
 }
 
 void changeToNextState() {
-  // Matikan semua lampu
   turnOffAllLights();
   
-  // Ubah ke state berikutnya
+  TrafficState nextState;
+
+  // Tentukan state selanjutnya berdasarkan state saat ini
   switch (currentState) {
-    case STATE_1:
-      currentState = STATE_2;
-      // Arah 1 Kuning, Arah 2 Merah
-      turnOnLights(PIN_LED_KUNING_ARAH1, PIN_LED_MERAH_ARAH2);
-      Serial.println("State 2: Arah 1 Kuning, Arah 2 Merah");
+    case STATE_EMERGENCY:
+    case STATE_PEDESTRIAN:
+      emergencyMode = false;
+      pedestrianMode = false;
+      nextState = STATE_ALL_RED_3; // Kembali ke state merah aman sebelum siklus baru
+      Serial.println("Mode Khusus Selesai. Kembali ke siklus normal.");
       break;
-      
-    case STATE_2:
-      currentState = STATE_3;
-      // Kedua Arah Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_ARAH1, PIN_LED_MERAH_ARAH2);
-      Serial.println("State 3: Kedua Arah Merah (Transisi)");
+
+    case STATE_ALL_RED_3:
+      nextState = STATE_NS_GREEN;
       break;
-      
-    case STATE_3:
-      currentState = STATE_4;
-      // Arah 1 Merah, Arah 2 Hijau
-      turnOnLights(PIN_LED_MERAH_ARAH1, PIN_LED_HIJAU_ARAH2);
-      Serial.println("State 4: Arah 1 Merah, Arah 2 Hijau");
+    case STATE_NS_GREEN:
+      nextState = STATE_NS_YELLOW;
       break;
-      
-    case STATE_4:
-      currentState = STATE_5;
-      // Arah 1 Merah, Arah 2 Kuning
-      turnOnLights(PIN_LED_MERAH_ARAH1, PIN_LED_KUNING_ARAH2);
-      Serial.println("State 5: Arah 1 Merah, Arah 2 Kuning");
+    case STATE_NS_YELLOW:
+      nextState = STATE_ALL_RED_1;
       break;
-      
-    case STATE_5:
-      currentState = STATE_6;
-      // Kedua Arah Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_ARAH1, PIN_LED_MERAH_ARAH2);
-      Serial.println("State 6: Kedua Arah Merah (Transisi)");
+    case STATE_ALL_RED_1:
+      nextState = STATE_N_GREEN;
       break;
-      
-    case STATE_6:
-      currentState = STATE_1;
-      // Arah 1 Hijau, Arah 2 Merah
-      turnOnLights(PIN_LED_HIJAU_ARAH1, PIN_LED_MERAH_ARAH2);
-      Serial.println("State 1: Arah 1 Hijau, Arah 2 Merah");
+    case STATE_N_GREEN:
+      nextState = STATE_N_YELLOW;
       break;
+    case STATE_N_YELLOW:
+      nextState = STATE_ALL_RED_2;
+      break;
+    case STATE_ALL_RED_2:
+      nextState = STATE_S_GREEN;
+      break;
+    case STATE_S_GREEN:
+      nextState = STATE_S_YELLOW;
+      break;
+    case STATE_S_YELLOW:
+      nextState = STATE_ALL_RED_3;
+      break;
+    default:
+      nextState = STATE_ALL_RED_3;
+      break;
+  }
+  
+  currentState = nextState; // Update state global
+
+  // Aktifkan lampu berdasarkan state yang BARU
+  switch (currentState) {
+      case STATE_NS_GREEN:
+          Serial.println("State: Hijau Lurus (Utara & Selatan)");
+          digitalWrite(PIN_LED_HIJAU_UTARA, HIGH);
+          digitalWrite(PIN_LED_HIJAU_SELATAN, HIGH);
+          break;
+      case STATE_NS_YELLOW:
+          Serial.println("State: Kuning (Utara & Selatan)");
+          digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+          digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
+          break;
+      case STATE_N_GREEN:
+          Serial.println("State: Hijau Belok (Utara)");
+          digitalWrite(PIN_LED_HIJAU_UTARA, HIGH);
+          digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+          break;
+      case STATE_N_YELLOW:
+          Serial.println("State: Kuning (Utara)");
+          digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+          digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+          break;
+      case STATE_S_GREEN:
+          Serial.println("State: Hijau Belok (Selatan)");
+          digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+          digitalWrite(PIN_LED_HIJAU_SELATAN, HIGH);
+          break;
+      case STATE_S_YELLOW:
+          Serial.println("State: Kuning (Selatan)");
+          digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+          digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
+          break;
+      case STATE_ALL_RED_1:
+      case STATE_ALL_RED_2:
+      case STATE_ALL_RED_3:
+          Serial.println("State: Semua Merah (Transisi)");
+          digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+          digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+          break;
   }
 }
 
 void turnOffAllLights() {
-  // Matikan semua LED dari 2 set lampu
-  digitalWrite(PIN_LED_HIJAU_ARAH1, LOW);
-  digitalWrite(PIN_LED_KUNING_ARAH1, LOW);
-  digitalWrite(PIN_LED_MERAH_ARAH1, LOW);
+  digitalWrite(PIN_LED_HIJAU_UTARA, LOW);
+  digitalWrite(PIN_LED_KUNING_UTARA, LOW);
+  digitalWrite(PIN_LED_MERAH_UTARA, LOW);
   
-  digitalWrite(PIN_LED_HIJAU_ARAH2, LOW);
-  digitalWrite(PIN_LED_KUNING_ARAH2, LOW);
-  digitalWrite(PIN_LED_MERAH_ARAH2, LOW);
+  digitalWrite(PIN_LED_HIJAU_SELATAN, LOW);
+  digitalWrite(PIN_LED_KUNING_SELATAN, LOW);
+  digitalWrite(PIN_LED_MERAH_SELATAN, LOW);
 }
 
-void turnOnLights(int pin1, int pin2) {
-  digitalWrite(pin1, HIGH);
-  digitalWrite(pin2, HIGH);
-}
-
-void setEmergencyMode() {
+void activateEmergencyMode() {
+  pedestrianMode = false; // Mode darurat membatalkan mode pejalan kaki
   emergencyMode = true;
-  turnOffAllLights();
+  currentState = STATE_EMERGENCY;
+  lastStateChange = millis();
   lastBlinkTime = millis();
-  emergencyBlinkState = false;
-  Serial.println("Emergency Mode Activated - Blinking Yellow");
+  emergencyBlinkState = true;
+  Serial.println("!!! MODE DARURAT DIAKTIFKAN (20 Detik) !!!");
+  
+  // Berikan umpan balik visual instan
+  turnOffAllLights();
+  digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+  digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
 }
 
-void clearEmergencyMode() {
-  emergencyMode = false;
+void activatePedestrianMode() {
+  pedestrianMode = true;
+  currentState = STATE_PEDESTRIAN;
+  lastStateChange = millis();
+  Serial.println(">>> MODE PEJALAN KAKI DIAKTIFKAN (15 Detik) <<<");
+  
+  // Langsung set semua lampu ke merah
   turnOffAllLights();
-  Serial.println("Emergency Mode Cleared - Returning to Normal");
-} 
+  digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+  digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+}

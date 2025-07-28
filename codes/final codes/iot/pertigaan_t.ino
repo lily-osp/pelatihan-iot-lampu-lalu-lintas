@@ -1,42 +1,35 @@
 /*
  * Proyek IoT Lampu Lalu Lintas - Pertigaan T-Shape (3-way T-Intersection)
- * ESP32 dengan Adafruit IO Integration
- * 
- * Sistem traffic light pertigaan T-shape yang realistis dengan fitur:
- * - Main road (jalan utama) dengan traffic lurus dan belok kanan
- * - Side road (jalan samping) dengan Belok Kanan dan kanan
+ * ESP32 dengan Adafruit IO Integration - VERSI FINAL DENGAN SAVE STATE
+ * * Sistem traffic light pertigaan T-shape yang realistis dengan fitur:
+ * - Main road (Utara-Selatan) dengan traffic lurus
+ * - Side road (Timur) dengan traffic lurus
  * - Timing yang berbeda untuk main road vs side road
- * - Left turn phase untuk side road
- * - Pedestrian crossing consideration
- * - IoT integration untuk monitoring dan kontrol
- * 
- * Komponen:
+ * - Mode darurat berwaktu (20 detik) yang diaktifkan dengan tombol (Prioritas Tertinggi)
+ * - Mode pejalan kaki berwaktu (15 detik) yang diaktifkan dengan tombol
+ * - IoT Integration dengan Adafruit IO
+ * * Komponen:
  * - ESP32 Dev Kit
  * - 9x LED (3x Merah, 3x Kuning, 3x Hijau)
  * - 9x Resistor 220Ω
+ * - 2x Push Button
  * - Breadboard & Kabel Jumper
- * 
- * Koneksi untuk Pertigaan T-Shape (3 Set Lampu):
- * Set 1: Main Road (Jalan Utama)
- * - Pin D23 -> LED Hijau Main Road
- * - Pin D22 -> LED Kuning Main Road  
- * - Pin D21 -> LED Merah Main Road
- * 
- * Set 2: Side Road (Jalan Samping)
- * - Pin D19 -> LED Hijau Side Road
- * - Pin D18 -> LED Kuning Side Road
- * - Pin D5  -> LED Merah Side Road
- * 
- * Set 3: Left Turn (Belok Kanan dari Side Road)
- * - Pin D4  -> LED Hijau Left Turn
- * - Pin D2  -> LED Kuning Left Turn
- * - Pin D15 -> LED Merah Left Turn
- * 
- * Logika T-Shape:
- * - Main road gets priority (longer green time)
- * - Side road gets shorter green time
- * - Left turn from side road gets dedicated phase
- * - Realistic timing for traffic flow
+ * * Koneksi untuk Pertigaan T-Shape (3 Set Lampu):
+ * Set 1: Arah Utara
+ * - Pin D23 -> LED Hijau Utara
+ * - Pin D22 -> LED Kuning Utara  
+ * - Pin D21 -> LED Merah Utara
+ * * Set 2: Arah Selatan
+ * - Pin D19 -> LED Hijau Selatan
+ * - Pin D18 -> LED Kuning Selatan
+ * - Pin D5  -> LED Merah Selatan
+ * * Set 3: Arah Timur
+ * - Pin D4  -> LED Hijau Timur
+ * - Pin D2  -> LED Kuning Timur
+ * - Pin D15 -> LED Merah Timur
+ * * Koneksi Tombol:
+ * - Pin D25 -> Tombol Darurat -> GND
+ * - Pin D26 -> Tombol Pejalan Kaki -> GND
  */
 
 #include <WiFi.h>
@@ -53,50 +46,70 @@ const char* password = "YOUR_WIFI_PASSWORD";
 #define AIO_USERNAME    "YOUR_AIO_USERNAME"
 #define AIO_KEY         "YOUR_AIO_KEY"
 
-// Pin LED - 3 Set Lampu Lalu Lintas T-Shape
-// Set 1: Main Road (Jalan Utama)
-const int PIN_LED_HIJAU_MAIN = 23;
-const int PIN_LED_KUNING_MAIN = 22;
-const int PIN_LED_MERAH_MAIN = 21;
+// Pin LED - 3 Set Lampu Lalu Lintas Pertigaan T-Shape
+// Set 1: Arah Utara
+const int PIN_LED_HIJAU_UTARA = 23;
+const int PIN_LED_KUNING_UTARA = 22;
+const int PIN_LED_MERAH_UTARA = 21;
 
-// Set 2: Side Road (Jalan Samping)
-const int PIN_LED_HIJAU_SIDE = 19;
-const int PIN_LED_KUNING_SIDE = 18;
-const int PIN_LED_MERAH_SIDE = 5;
+// Set 2: Arah Selatan
+const int PIN_LED_HIJAU_SELATAN = 19;
+const int PIN_LED_KUNING_SELATAN = 18;
+const int PIN_LED_MERAH_SELATAN = 5;
 
-// Set 3: Left Turn (Belok Kanan dari Side Road)
-const int PIN_LED_HIJAU_LEFT = 4;
-const int PIN_LED_KUNING_LEFT = 2;
-const int PIN_LED_MERAH_LEFT = 15;
+// Set 3: Arah Timur
+const int PIN_LED_HIJAU_TIMUR = 4;
+const int PIN_LED_KUNING_TIMUR = 2;
+const int PIN_LED_MERAH_TIMUR = 15;
 
-// State machine untuk lampu lalu lintas pertigaan T-shape
+// Pin untuk tombol
+const int PIN_TOMBOL_DARURAT = 25;
+const int PIN_TOMBOL_PEDESTRIAN = 26;
+
+// State machine yang disederhanakan untuk pertigaan
 enum TrafficState {
-  STATE_1, // Main Road Hijau (Lurus & Belok Kanan), Side Road & Left Turn Merah
-  STATE_2, // Main Road Kuning, Side Road & Left Turn Merah
-  STATE_3, // Semua Merah (Transisi)
-  STATE_4, // Side Road Hijau (Belok Kanan), Main Road & Left Turn Merah
-  STATE_5, // Side Road Kuning, Main Road & Left Turn Merah
-  STATE_6, // Semua Merah (Transisi)
-  STATE_7, // Left Turn Hijau (Belok Kanan dari Side Road), Main Road & Side Road Merah
-  STATE_8, // Left Turn Kuning, Main Road & Side Road Merah
-  STATE_9  // Semua Merah (Transisi)
+  // Siklus Utama
+  STATE_NS_GREEN,
+  STATE_NS_YELLOW,
+  STATE_ALL_RED_1,  // Transisi dari Utara-Selatan ke Timur
+  STATE_E_GREEN,
+  STATE_E_YELLOW,
+  STATE_ALL_RED_2,  // Transisi dari Timur kembali ke Utara-Selatan
+
+  // Mode Khusus
+  STATE_EMERGENCY,
+  STATE_PEDESTRIAN
 };
 
-TrafficState currentState = STATE_1;
+TrafficState currentState = STATE_ALL_RED_2; // Mulai dari state aman untuk memulai siklus dari awal
+TrafficState lastNormalState = STATE_ALL_RED_2; // Variabel untuk menyimpan state sebelum interupsi
 unsigned long lastStateChange = 0;
 
-// Durasi setiap state (dalam milidetik) - Realistic timing untuk T-shape
-const unsigned long DURASI_HIJAU_MAIN = 35000;     // 35 detik - Main road priority
-const unsigned long DURASI_KUNING = 4000;          // 4 detik
-const unsigned long DURASI_TRANSISI = 2000;        // 2 detik
-const unsigned long DURASI_HIJAU_SIDE = 20000;     // 20 detik - Side road shorter
-const unsigned long DURASI_HIJAU_LEFT = 15000;     // 15 detik - Left turn phase
+// Durasi setiap state (dalam milidetik)
+const unsigned long DURASI_HIJAU_UTAMA = 20000;      // 20 detik untuk lurus
+const unsigned long DURASI_KUNING = 3000;            // 3 detik
+const unsigned long DURASI_TRANSISI_MERAH = 2000;    // 2 detik
+const unsigned long DURASI_EMERGENCY = 20000;        // 20 detik untuk mode darurat
+const unsigned long DURASI_PEDESTRIAN = 15000;       // 15 detik untuk mode pejalan kaki
 
-// Emergency mode variables
+// Mode flags
 bool emergencyMode = false;
+bool pedestrianMode = false;
+
+// Variabel untuk mode darurat (blinking)
 unsigned long lastBlinkTime = 0;
-bool emergencyBlinkState = false;
-const unsigned long BLINK_INTERVAL = 500; // 500ms for blinking
+bool emergencyBlinkState = true;
+const unsigned long BLINK_INTERVAL = 500; // interval kedip 500ms
+
+// Variabel untuk debouncing tombol
+unsigned long lastEmergencyDebounceTime = 0;
+unsigned long lastPedestrianDebounceTime = 0;
+unsigned long debounceDelay = 50; // 50ms debounce delay
+
+int lastEmergencyButtonReading = HIGH;
+int emergencyButtonState = HIGH;
+int lastPedestrianButtonReading = HIGH;
+int pedestrianButtonState = HIGH;
 
 // Setup WiFi client dan MQTT
 WiFiClient client;
@@ -107,32 +120,32 @@ Adafruit_MQTT_Publish statusFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/f
 Adafruit_MQTT_Publish stateFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/traffic-state");
 Adafruit_MQTT_Publish uptimeFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/traffic-uptime");
 Adafruit_MQTT_Publish dataFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/traffic-data");
+Adafruit_MQTT_Publish modeFeed = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/traffic-mode");
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("=== Proyek IoT Lampu Lalu Lintas Pertigaan T-Shape ===");
+  Serial.println("=== Proyek IoT Lampu Lalu Lintas Pertigaan T-Shape (Versi Final dengan Save State) ===");
   
-  // Setup pin LED sebagai output - 3 Set Lampu T-Shape
-  // Set 1: Main Road
-  pinMode(PIN_LED_HIJAU_MAIN, OUTPUT);
-  pinMode(PIN_LED_KUNING_MAIN, OUTPUT);
-  pinMode(PIN_LED_MERAH_MAIN, OUTPUT);
+  // Setup pin LED sebagai output
+  pinMode(PIN_LED_HIJAU_UTARA, OUTPUT);
+  pinMode(PIN_LED_KUNING_UTARA, OUTPUT);
+  pinMode(PIN_LED_MERAH_UTARA, OUTPUT);
   
-  // Set 2: Side Road
-  pinMode(PIN_LED_HIJAU_SIDE, OUTPUT);
-  pinMode(PIN_LED_KUNING_SIDE, OUTPUT);
-  pinMode(PIN_LED_MERAH_SIDE, OUTPUT);
+  pinMode(PIN_LED_HIJAU_SELATAN, OUTPUT);
+  pinMode(PIN_LED_KUNING_SELATAN, OUTPUT);
+  pinMode(PIN_LED_MERAH_SELATAN, OUTPUT);
   
-  // Set 3: Left Turn
-  pinMode(PIN_LED_HIJAU_LEFT, OUTPUT);
-  pinMode(PIN_LED_KUNING_LEFT, OUTPUT);
-  pinMode(PIN_LED_MERAH_LEFT, OUTPUT);
+  pinMode(PIN_LED_HIJAU_TIMUR, OUTPUT);
+  pinMode(PIN_LED_KUNING_TIMUR, OUTPUT);
+  pinMode(PIN_LED_MERAH_TIMUR, OUTPUT);
+
+  // Setup pin tombol sebagai input dengan pull-up internal
+  pinMode(PIN_TOMBOL_DARURAT, INPUT_PULLUP);
+  pinMode(PIN_TOMBOL_PEDESTRIAN, INPUT_PULLUP);
   
-  // Matikan semua LED di awal
-  turnOffAllLights();
-  
-  // Set initial state lights
-  turnOnLights(PIN_LED_HIJAU_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
+  // Matikan semua LED di awal dan mulai state pertama
+  changeToNextState(); 
+  lastStateChange = millis();
   
   // Koneksi WiFi
   connectToWiFi();
@@ -141,7 +154,6 @@ void setup() {
   connectToMQTT();
   
   Serial.println("Setup selesai. Memulai sistem lampu lalu lintas pertigaan T-shape...");
-  Serial.println("State 1: Main Road Hijau, Side Road & Left Turn Merah");
 }
 
 void loop() {
@@ -151,25 +163,30 @@ void loop() {
   }
   mqtt.processPackets(100);
   
-  // Logika state machine non-blocking
   unsigned long currentTime = millis();
-  
-  // Handle emergency mode blinking
-  if (emergencyMode) {
+
+  // 1. Cek input tombol
+  checkEmergencyButton();
+  checkPedestrianButton();
+
+  // 2. Jalankan logika state machine
+  // Logika khusus untuk blinking saat dalam mode darurat
+  if (currentState == STATE_EMERGENCY) {
     if (currentTime - lastBlinkTime >= BLINK_INTERVAL) {
       emergencyBlinkState = !emergencyBlinkState;
       if (emergencyBlinkState) {
-        // Turn on all yellow LEDs
-        turnOnLights(PIN_LED_KUNING_MAIN, PIN_LED_KUNING_SIDE, PIN_LED_KUNING_LEFT);
+        turnOffAllLights();
+        digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+        digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
+        digitalWrite(PIN_LED_KUNING_TIMUR, HIGH);
       } else {
-        // Turn off all LEDs
         turnOffAllLights();
       }
       lastBlinkTime = currentTime;
     }
-    return; // Don't proceed with normal state machine during emergency
   }
-  
+
+  // Logika state machine non-blocking untuk semua siklus
   if (currentTime - lastStateChange >= getStateDuration()) {
     changeToNextState();
     lastStateChange = currentTime;
@@ -217,130 +234,222 @@ void connectToMQTT() {
   Serial.println("Adafruit IO terhubung!");
 }
 
+void checkEmergencyButton() {
+  // Mode darurat memiliki prioritas tertinggi dan dapat menginterupsi mode lain.
+  int reading = digitalRead(PIN_TOMBOL_DARURAT);
+
+  if (reading != lastEmergencyButtonReading) {
+    lastEmergencyDebounceTime = millis();
+  }
+
+  if ((millis() - lastEmergencyDebounceTime) > debounceDelay) {
+    if (reading != emergencyButtonState) {
+      emergencyButtonState = reading;
+      if (emergencyButtonState == LOW && !emergencyMode) {
+        activateEmergencyMode();
+      }
+    }
+  }
+  lastEmergencyButtonReading = reading;
+}
+
+void checkPedestrianButton() {
+  if (emergencyMode) return;
+
+  int reading = digitalRead(PIN_TOMBOL_PEDESTRIAN);
+
+  if (reading != lastPedestrianButtonReading) {
+    lastPedestrianDebounceTime = millis();
+  }
+
+  if ((millis() - lastPedestrianDebounceTime) > debounceDelay) {
+    if (reading != pedestrianButtonState) {
+      pedestrianButtonState = reading;
+      if (pedestrianButtonState == LOW && !pedestrianMode) {
+        activatePedestrianMode();
+      }
+    }
+  }
+  lastPedestrianButtonReading = reading;
+}
+
 unsigned long getStateDuration() {
   switch (currentState) {
-    case STATE_1: return DURASI_HIJAU_MAIN;
-    case STATE_2: return DURASI_KUNING;
-    case STATE_3: return DURASI_TRANSISI;
-    case STATE_4: return DURASI_HIJAU_SIDE;
-    case STATE_5: return DURASI_KUNING;
-    case STATE_6: return DURASI_TRANSISI;
-    case STATE_7: return DURASI_HIJAU_LEFT;
-    case STATE_8: return DURASI_KUNING;
-    case STATE_9: return DURASI_TRANSISI;
-    default: return 5000;
+    case STATE_NS_GREEN:   return DURASI_HIJAU_UTAMA;
+    case STATE_E_GREEN:    return DURASI_HIJAU_UTAMA;
+    
+    case STATE_NS_YELLOW:  return DURASI_KUNING;
+    case STATE_E_YELLOW:   return DURASI_KUNING;
+      
+    case STATE_ALL_RED_1: return DURASI_TRANSISI_MERAH;
+    case STATE_ALL_RED_2: return DURASI_TRANSISI_MERAH;
+
+    case STATE_EMERGENCY:  return DURASI_EMERGENCY;
+    case STATE_PEDESTRIAN: return DURASI_PEDESTRIAN;
+
+    default: return 2000; // Durasi default jika terjadi error
   }
 }
 
+TrafficState determineNextStateAfterInterruption() {
+    // Fungsi ini menentukan state selanjutnya setelah interupsi,
+    // memastikan siklus berlanjut dengan benar.
+    switch (lastNormalState) {
+        case STATE_NS_GREEN:
+        case STATE_NS_YELLOW:
+            return STATE_ALL_RED_1; // Lanjut ke fase Timur
+
+        case STATE_E_GREEN:
+        case STATE_E_YELLOW:
+            return STATE_ALL_RED_2; // Lanjut kembali ke fase Utara-Selatan
+
+        // Jika interupsi terjadi saat semua lampu merah, lanjutkan ke state berikutnya yang sesuai
+        case STATE_ALL_RED_1: return STATE_E_GREEN;
+        case STATE_ALL_RED_2: return STATE_NS_GREEN;
+
+        default:
+            return STATE_ALL_RED_2; // Default aman
+    }
+}
+
 void changeToNextState() {
-  // Matikan semua lampu
   turnOffAllLights();
   
-  // Ubah ke state berikutnya
+  TrafficState nextState;
+
+  // 1. Tentukan state selanjutnya berdasarkan state saat ini
   switch (currentState) {
-    case STATE_1:
-      currentState = STATE_2;
-      // Main Road Kuning, Side Road & Left Turn Merah
-      turnOnLights(PIN_LED_KUNING_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 2: Main Road Kuning, Side Road & Left Turn Merah");
+    case STATE_EMERGENCY:
+      emergencyMode = false;
+      nextState = determineNextStateAfterInterruption();
+      Serial.println("Mode Darurat Selesai. Melanjutkan siklus...");
+      break;
+
+    case STATE_PEDESTRIAN:
+      pedestrianMode = false;
+      nextState = determineNextStateAfterInterruption();
+      Serial.println("Mode Pejalan Kaki Selesai. Melanjutkan siklus...");
+      break;
+
+    case STATE_ALL_RED_2: // Kondisi awal atau akhir dari siklus
+      nextState = STATE_NS_GREEN;
+      break;
+
+    case STATE_NS_GREEN:
+      nextState = STATE_NS_YELLOW;
+      break;
+
+    case STATE_NS_YELLOW:
+      nextState = STATE_ALL_RED_1;
+      break;
+
+    case STATE_ALL_RED_1:
+      nextState = STATE_E_GREEN;
       break;
       
-    case STATE_2:
-      currentState = STATE_3;
-      // Semua Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 3: Semua Merah (Transisi)");
+    case STATE_E_GREEN:
+      nextState = STATE_E_YELLOW;
       break;
-      
-    case STATE_3:
-      currentState = STATE_4;
-      // Side Road Hijau, Main Road & Left Turn Merah
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_HIJAU_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 4: Side Road Hijau, Main Road & Left Turn Merah");
+
+    case STATE_E_YELLOW:
+      nextState = STATE_ALL_RED_2;
       break;
-      
-    case STATE_4:
-      currentState = STATE_5;
-      // Side Road Kuning, Main Road & Left Turn Merah
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_KUNING_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 5: Side Road Kuning, Main Road & Left Turn Merah");
+
+    default: // Jika terjadi state yang tidak diketahui, kembali ke awal siklus
+      nextState = STATE_ALL_RED_2;
       break;
-      
-    case STATE_5:
-      currentState = STATE_6;
-      // Semua Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 6: Semua Merah (Transisi)");
-      break;
-      
-    case STATE_6:
-      currentState = STATE_7;
-      // Left Turn Hijau, Main Road & Side Road Merah
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_HIJAU_LEFT);
-      Serial.println("State 7: Left Turn Hijau, Main Road & Side Road Merah");
-      break;
-      
-    case STATE_7:
-      currentState = STATE_8;
-      // Left Turn Kuning, Main Road & Side Road Merah
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_KUNING_LEFT);
-      Serial.println("State 8: Left Turn Kuning, Main Road & Side Road Merah");
-      break;
-      
-    case STATE_8:
-      currentState = STATE_9;
-      // Semua Merah (Transisi)
-      turnOnLights(PIN_LED_MERAH_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 9: Semua Merah (Transisi)");
-      break;
-      
-    case STATE_9:
-      currentState = STATE_1;
-      // Kembali ke siklus: Main Road Hijau, Side Road & Left Turn Merah
-      turnOnLights(PIN_LED_HIJAU_MAIN, PIN_LED_MERAH_SIDE, PIN_LED_MERAH_LEFT);
-      Serial.println("State 1: Main Road Hijau, Side Road & Left Turn Merah");
-      break;
+  }
+  
+  currentState = nextState; // Update state global
+
+  // 2. Aktifkan lampu berdasarkan state yang BARU
+  switch (currentState) {
+      case STATE_NS_GREEN:
+          Serial.println("State: Utara-Selatan Hijau");
+          digitalWrite(PIN_LED_HIJAU_UTARA, HIGH);
+          digitalWrite(PIN_LED_HIJAU_SELATAN, HIGH);
+          digitalWrite(PIN_LED_MERAH_TIMUR, HIGH);
+          break;
+      case STATE_NS_YELLOW:
+          Serial.println("State: Utara-Selatan Kuning");
+          digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+          digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
+          digitalWrite(PIN_LED_MERAH_TIMUR, HIGH);
+          break;
+      case STATE_E_GREEN:
+          Serial.println("State: Timur Hijau");
+          digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+          digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+          digitalWrite(PIN_LED_HIJAU_TIMUR, HIGH);
+          break;
+      case STATE_E_YELLOW:
+          Serial.println("State: Timur Kuning");
+          digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+          digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+          digitalWrite(PIN_LED_KUNING_TIMUR, HIGH);
+          break;
+      case STATE_ALL_RED_1:
+      case STATE_ALL_RED_2:
+          Serial.println("State: Semua Merah (Transisi)");
+          setAllRed();
+          break;
   }
 }
 
 void turnOffAllLights() {
-  // Matikan semua LED dari 3 set lampu T-shape
-  digitalWrite(PIN_LED_HIJAU_MAIN, LOW);
-  digitalWrite(PIN_LED_KUNING_MAIN, LOW);
-  digitalWrite(PIN_LED_MERAH_MAIN, LOW);
+  digitalWrite(PIN_LED_HIJAU_UTARA, LOW);
+  digitalWrite(PIN_LED_KUNING_UTARA, LOW);
+  digitalWrite(PIN_LED_MERAH_UTARA, LOW);
   
-  digitalWrite(PIN_LED_HIJAU_SIDE, LOW);
-  digitalWrite(PIN_LED_KUNING_SIDE, LOW);
-  digitalWrite(PIN_LED_MERAH_SIDE, LOW);
+  digitalWrite(PIN_LED_HIJAU_SELATAN, LOW);
+  digitalWrite(PIN_LED_KUNING_SELATAN, LOW);
+  digitalWrite(PIN_LED_MERAH_SELATAN, LOW);
   
-  digitalWrite(PIN_LED_HIJAU_LEFT, LOW);
-  digitalWrite(PIN_LED_KUNING_LEFT, LOW);
-  digitalWrite(PIN_LED_MERAH_LEFT, LOW);
+  digitalWrite(PIN_LED_HIJAU_TIMUR, LOW);
+  digitalWrite(PIN_LED_KUNING_TIMUR, LOW);
+  digitalWrite(PIN_LED_MERAH_TIMUR, LOW);
 }
 
-void turnOnLights(int pin1, int pin2, int pin3) {
-  digitalWrite(pin1, HIGH);
-  digitalWrite(pin2, HIGH);
-  digitalWrite(pin3, HIGH);
+void setAllRed() {
+  digitalWrite(PIN_LED_MERAH_UTARA, HIGH);
+  digitalWrite(PIN_LED_MERAH_SELATAN, HIGH);
+  digitalWrite(PIN_LED_MERAH_TIMUR, HIGH);
 }
 
-void setEmergencyMode() {
+void activateEmergencyMode() {
+  if (!emergencyMode) {
+    lastNormalState = currentState; // Simpan state saat ini
+  }
+  pedestrianMode = false;
   emergencyMode = true;
-  turnOffAllLights();
+  currentState = STATE_EMERGENCY;
+  lastStateChange = millis();
   lastBlinkTime = millis();
-  emergencyBlinkState = false;
-  Serial.println("Emergency Mode Activated - Blinking Yellow");
+  emergencyBlinkState = true;
+  Serial.println("!!! MODE DARURAT DIAKTIFKAN (20 Detik) !!!");
+  
+  turnOffAllLights();
+  digitalWrite(PIN_LED_KUNING_UTARA, HIGH);
+  digitalWrite(PIN_LED_KUNING_SELATAN, HIGH);
+  digitalWrite(PIN_LED_KUNING_TIMUR, HIGH);
 }
 
-void clearEmergencyMode() {
-  emergencyMode = false;
+void activatePedestrianMode() {
+  if (!pedestrianMode) {
+    lastNormalState = currentState; // Simpan state saat ini
+  }
+  pedestrianMode = true;
+  currentState = STATE_PEDESTRIAN;
+  lastStateChange = millis();
+  Serial.println(">>> MODE PEJALAN KAKI DIAKTIFKAN (15 Detik) <<<");
+  
   turnOffAllLights();
-  Serial.println("Emergency Mode Cleared - Returning to Normal");
+  setAllRed();
 }
 
 void sendDataToCloud() {
   // Kirim status lampu
-  String status = "State " + String(currentState + 1);
+  String status = getStateDescription();
   if (!statusFeed.publish(status.c_str())) {
     Serial.println("Gagal mengirim status ke Adafruit IO");
   }
@@ -348,6 +457,12 @@ void sendDataToCloud() {
   // Kirim state number
   if (!stateFeed.publish(currentState)) {
     Serial.println("Gagal mengirim state ke Adafruit IO");
+  }
+  
+  // Kirim mode status
+  String modeStatus = emergencyMode ? "emergency" : (pedestrianMode ? "pedestrian" : "normal");
+  if (!modeFeed.publish(modeStatus.c_str())) {
+    Serial.println("Gagal mengirim mode ke Adafruit IO");
   }
   
   // Kirim data JSON dengan informasi detail
@@ -359,6 +474,20 @@ void sendDataToCloud() {
   Serial.println("Data terkirim ke Adafruit IO: " + status);
 }
 
+String getStateDescription() {
+  switch (currentState) {
+    case STATE_NS_GREEN: return "Utara-Selatan Hijau";
+    case STATE_NS_YELLOW: return "Utara-Selatan Kuning";
+    case STATE_E_GREEN: return "Timur Hijau";
+    case STATE_E_YELLOW: return "Timur Kuning";
+    case STATE_ALL_RED_1:
+    case STATE_ALL_RED_2: return "Semua Merah (Transisi)";
+    case STATE_EMERGENCY: return "Mode Darurat";
+    case STATE_PEDESTRIAN: return "Mode Pejalan Kaki";
+    default: return "Unknown State";
+  }
+}
+
 String createJSONData() {
   // Buat JSON data dengan informasi detail
   String json = "{";
@@ -368,17 +497,19 @@ String createJSONData() {
   json += "\"direction\":\"";
   
   switch (currentState) {
-    case STATE_1:
-    case STATE_2:
-      json += "main_road";
+    case STATE_NS_GREEN:
+    case STATE_NS_YELLOW:
+      json += "utara_selatan";
       break;
-    case STATE_4:
-    case STATE_5:
-      json += "side_road";
+    case STATE_E_GREEN:
+    case STATE_E_YELLOW:
+      json += "timur";
       break;
-    case STATE_7:
-    case STATE_8:
-      json += "left_turn";
+    case STATE_EMERGENCY:
+      json += "emergency";
+      break;
+    case STATE_PEDESTRIAN:
+      json += "pedestrian";
       break;
     default:
       json += "transisi";
@@ -388,14 +519,12 @@ String createJSONData() {
   json += "\",\"status\":\"";
   
   switch (currentState) {
-    case STATE_1:
-    case STATE_4:
-    case STATE_7:
+    case STATE_NS_GREEN:
+    case STATE_E_GREEN:
       json += "hijau";
       break;
-    case STATE_2:
-    case STATE_5:
-    case STATE_8:
+    case STATE_NS_YELLOW:
+    case STATE_E_YELLOW:
       json += "kuning";
       break;
     default:
@@ -403,6 +532,8 @@ String createJSONData() {
       break;
   }
   
+  json += "\",\"mode\":\"";
+  json += emergencyMode ? "emergency" : (pedestrianMode ? "pedestrian" : "normal");
   json += "\",\"type\":\"t_shape\"}";
   
   return json;
