@@ -2105,4 +2105,555 @@ tr:hover {
     .section {
         display: none !important;
     }
+/* --- Hardware & Electronics Section Styles --- */
+
+/* Component Overview */
+.component-overview {
+    margin: var(--spacing-6) 0;
+}
+
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.component-card {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-6);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.component-card:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.component-icon {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-3);
+    display: block;
+}
+
+.component-card h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+/* Circuit Diagram Styles */
+.circuit-diagram-section {
+    margin: var(--spacing-6) 0;
+}
+
+.circuit-diagram-section h4 {
+    color: var(--neutral-800);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-4);
+    font-weight: 600;
+}
+
+.led-connection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-4);
+}
+
+.direction-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-5);
+    border: 1px solid var(--neutral-200);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+}
+
+.direction-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--primary-200);
+}
+
+.direction-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-3);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 2px solid var(--neutral-200);
+}
+
+.direction-icon {
+    font-size: var(--font-size-lg);
+}
+
+.direction-header h5 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0;
+}
+
+.led-connection-table {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.led-row {
+    display: grid;
+    grid-template-columns: 40px 90px 80px 1fr;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) var(--spacing-3);
+    background: var(--neutral-50);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.led-row:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    transform: translateX(2px);
+}
+
+.led-color {
+    font-size: var(--font-size-lg);
+    text-align: center;
+}
+
+.gpio-pin {
+    background: var(--primary-600);
+    color: white;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-align: center;
+}
+
+.led-label {
+    color: var(--neutral-700);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
+
+.connection-info {
+    color: var(--neutral-500);
+    font-size: var(--font-size-sm);
+    text-align: right;
+    font-style: italic;
+}
+
+.pinout-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-6);
+}
+
+.pinout-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.pinout-section h5 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+.pin-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.pin-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.pin-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    transform: translateY(-1px);
+}
+
+.pin-number {
+    background: var(--primary-600);
+    color: white;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+}
+
+.pin-label {
+    font-weight: 600;
+    color: var(--neutral-700);
+    flex: 1;
+}
+
+.pin-connection {
+    color: var(--neutral-500);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+}
+
+.button-connections {
+    margin-top: var(--spacing-6);
+    padding: var(--spacing-4);
+    background: var(--warning-50);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--warning-200);
+}
+
+.button-connections h5 {
+    color: var(--warning-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+/* Component Specifications */
+.component-specs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.spec-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.spec-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-4);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-3);
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) var(--spacing-3);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.spec-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+}
+
+.spec-label {
+    font-weight: 600;
+    color: var(--neutral-700);
+}
+
+.spec-value {
+    color: var(--primary-600);
+    font-weight: 500;
+    text-align: right;
+}
+
+/* Power Analysis */
+.power-analysis {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.power-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.power-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-4);
+    font-weight: 600;
+}
+
+.power-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-3);
+}
+
+.power-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-3);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.power-item:hover {
+    background: var(--success-50);
+    border-color: var(--success-200);
+}
+
+.power-label {
+    font-weight: 600;
+    color: var(--neutral-700);
+    flex: 1;
+}
+
+.power-value {
+    color: var(--success-600);
+    font-weight: 500;
+    text-align: center;
+}
+
+.power-power {
+    color: var(--warning-600);
+    font-weight: 600;
+    text-align: right;
+    min-width: 80px;
+}
+
+.power-recommendations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-4);
+}
+
+.recommendation-item {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.recommendation-item h5 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+/* Safety Features */
+.safety-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.safety-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.safety-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+/* Environmental Factors */
+.environmental-factors {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.env-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.env-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+.env-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-3);
+}
+
+.env-item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-3);
+    background: white;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--neutral-200);
+    transition: var(--transition-fast);
+}
+
+.env-item:hover {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+}
+
+.env-label {
+    font-weight: 600;
+    color: var(--neutral-700);
+    font-size: var(--font-size-sm);
+}
+
+.env-value {
+    color: var(--success-600);
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+    margin: var(--spacing-1) 0;
+}
+
+.env-note {
+    color: var(--neutral-500);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+}
+
+/* EMI/EMC Considerations */
+.emi-considerations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.emi-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.emi-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+/* PCB Considerations */
+.pcb-considerations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+}
+
+.pcb-section {
+    background: var(--neutral-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    border: 1px solid var(--neutral-200);
+}
+
+.pcb-section h4 {
+    color: var(--primary-700);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-3);
+    font-weight: 600;
+}
+
+/* Responsive Design for Hardware Section */
+@media (max-width: 768px) {
+    .component-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .led-connection-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pinout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .power-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .spec-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .env-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .led-row {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        text-align: center;
+    }
+    
+    .connection-info {
+        text-align: center;
+    }
+    
+    .power-item {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        text-align: center;
+    }
+    
+    .spec-item {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        text-align: center;
+    }
+    
+    .pin-item {
+        flex-direction: column;
+        gap: var(--spacing-2);
+        text-align: center;
+    }
+}
+
 } /* CSS Updated: Mon Jul 28 05:18:32 AM WIB 2025 */

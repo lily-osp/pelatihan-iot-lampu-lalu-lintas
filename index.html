@@ -59,6 +59,11 @@
                             <span class="nav-text">Mikrokontroler</span>
                             <div class="section-indicator"></div>
                         </a>
+                        <a href="#hardware-electronics" class="nav-link" data-section="hardware-electronics">
+                            <span class="nav-icon">🔌</span>
+                            <span class="nav-text">Hardware</span>
+                            <div class="section-indicator"></div>
+                        </a>
                         <a href="#project-details" class="nav-link" data-section="project-details">
                             <span class="nav-icon">📋</span>
                             <span class="nav-text">Proyek</span>
@@ -872,6 +877,815 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Machine States Explanation -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🧠</div>
+                    <h3>Konsep State Machine & Machine States</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        <strong>State Machine</strong> adalah model komputasi yang terdiri dari sejumlah state (keadaan) yang terbatas, di mana sistem dapat berada dalam satu state pada waktu tertentu. Transisi antar state terjadi berdasarkan input atau kondisi tertentu. Dalam konteks lampu lalu lintas, state machine memastikan urutan operasi yang aman dan terprediksi.
+                    </p>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <h4>Komponen State Machine</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">States</span> - Keadaan sistem pada waktu tertentu</li>
+                                <li><span class="status-active">Transitions</span> - Perpindahan antar state</li>
+                                <li><span class="status-active">Events</span> - Pemicu transisi (timer, button, sensor)</li>
+                                <li><span class="status-active">Actions</span> - Aksi yang dilakukan dalam state</li>
+                                <li><span class="status-active">Conditions</span> - Kondisi untuk transisi</li>
+                            </ul>
+                        </div>
+                        <div class="info-item">
+                            <h4>Keunggulan State Machine</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Predictable</span> - Perilaku sistem dapat diprediksi</li>
+                                <li><span class="status-active">Maintainable</span> - Mudah dipahami dan dimodifikasi</li>
+                                <li><span class="status-active">Debuggable</span> - Mudah di-debug dan di-trace</li>
+                                <li><span class="status-active">Scalable</span> - Mudah ditambah state baru</li>
+                                <li><span class="status-active">Safe</span> - Mencegah kondisi yang tidak valid</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🚦</div>
+                            <h3>Machine States dalam Sistem Lampu Lalu Lintas</h3>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-content">
+                                Sistem lampu lalu lintas menggunakan <strong>12-20 states</strong> tergantung kompleksitas pola lalu lintas. Setiap state memiliki durasi, kondisi transisi, dan aksi yang spesifik untuk memastikan aliran lalu lintas yang aman dan efisien.
+                            </p>
+                            
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>State Categories</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Normal States</span> - Operasi rutin lampu lalu lintas</li>
+                                        <li><span class="status-active">Transition States</span> - Perpindahan antar fase</li>
+                                        <li><span class="status-active">Emergency States</span> - Mode darurat (kuning berkedip)</li>
+                                        <li><span class="status-active">Pedestrian States</span> - Mode pejalan kaki</li>
+                                        <li><span class="status-active">Idle States</span> - State menunggu atau standby</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>State Properties</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Duration</span> - Waktu state aktif (detik)</li>
+                                        <li><span class="status-active">LED Pattern</span> - Kombinasi LED yang menyala</li>
+                                        <li><span class="status-active">Next State</span> - State berikutnya setelah transisi</li>
+                                        <li><span class="status-active">Conditions</span> - Kondisi untuk keluar dari state</li>
+                                        <li><span class="status-active">Actions</span> - Aksi yang dilakukan dalam state</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">📊</div>
+                                    <h3>Detail Machine States per Pola Lalu Lintas</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>Pertigaan Y (12 States)</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State 0-1</span> - Jalan utama hijau (20s)</li>
+                                                <li><span class="status-active">State 2-3</span> - Transisi ke jalan cabang</li>
+                                                <li><span class="status-active">State 4-5</span> - Jalan cabang hijau (15s)</li>
+                                                <li><span class="status-active">State 6-7</span> - Transisi kembali ke utama</li>
+                                                <li><span class="status-active">State 8-11</span> - Emergency mode (kuning berkedip)</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Pertigaan T (12 States)</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State 0-1</span> - Jalan utama hijau (25s)</li>
+                                                <li><span class="status-active">State 2-3</span> - Transisi ke jalan cabang</li>
+                                                <li><span class="status-active">State 4-5</span> - Jalan cabang hijau (10s)</li>
+                                                <li><span class="status-active">State 6-7</span> - Transisi kembali ke utama</li>
+                                                <li><span class="status-active">State 8-11</span> - Emergency mode (kuning berkedip)</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Perempatan 2 Set (12 States)</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State 0-1</span> - Utara-Selatan hijau (20s)</li>
+                                                <li><span class="status-active">State 2-3</span> - Transisi ke Timur-Barat</li>
+                                                <li><span class="status-active">State 4-5</span> - Timur-Barat hijau (20s)</li>
+                                                <li><span class="status-active">State 6-7</span> - Transisi kembali ke Utara-Selatan</li>
+                                                <li><span class="status-active">State 8-11</span> - Emergency mode (kuning berkedip)</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Perempatan 4 Arah IoT (20 States)</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State 0-3</span> - Utara hijau utama (20s)</li>
+                                                <li><span class="status-active">State 4-7</span> - Timur hijau individual (10s)</li>
+                                                <li><span class="status-active">State 8-11</span> - Selatan hijau individual (10s)</li>
+                                                <li><span class="status-active">State 12-15</span> - Barat hijau individual (10s)</li>
+                                                <li><span class="status-active">State 16-19</span> - Emergency & pedestrian modes</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">⚙️</div>
+                                    <h3>Implementasi State Machine dalam Kode</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p class="text-content">
+                                        State machine diimplementasikan menggunakan <strong>switch-case statement</strong> atau <strong>array of function pointers</strong> untuk efisiensi dan kemudahan maintenance. Setiap state memiliki handler function yang mengatur LED pattern, timing, dan transisi.
+                                    </p>
+                                    
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>State Machine Structure</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State Variable</span> - Menyimpan state saat ini</li>
+                                                <li><span class="status-active">Timer Variables</span> - Tracking durasi state</li>
+                                                <li><span class="status-active">LED Control</span> - Fungsi kontrol LED</li>
+                                                <li><span class="status-active">State Handlers</span> - Fungsi untuk setiap state</li>
+                                                <li><span class="status-active">Transition Logic</span> - Logika perpindahan state</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>State Machine Features</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Save State</span> - Menyimpan state ke EEPROM</li>
+                                                <li><span class="status-active">Load State</span> - Memuat state dari EEPROM</li>
+                                                <li><span class="status-active">Emergency Override</span> - Interrupt untuk emergency</li>
+                                                <li><span class="status-active">State Validation</span> - Validasi state yang valid</li>
+                                                <li><span class="status-active">State Logging</span> - Log perubahan state</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="code-example">
+                                        <h4>Contoh Implementasi State Machine</h4>
+                                        <pre><code>// State machine variables
+int currentState = 0;
+unsigned long stateStartTime = 0;
+const int STATE_DURATIONS[] = {20, 3, 15, 3, 20, 3, 15, 3, 20, 3, 15, 3};
+
+void loop() {
+    unsigned long currentTime = millis();
+    unsigned long stateElapsed = currentTime - stateStartTime;
+    
+    // Check if state should transition
+    if (stateElapsed >= STATE_DURATIONS[currentState] * 1000) {
+        currentState = (currentState + 1) % 12;
+        stateStartTime = currentTime;
+        updateLEDs(currentState);
+    }
+    
+    // Handle emergency button
+    if (digitalRead(EMERGENCY_BUTTON) == HIGH) {
+        currentState = 8; // Emergency state
+        stateStartTime = currentTime;
+    }
+}
+
+void updateLEDs(int state) {
+    // Set LED pattern based on state
+    switch(state) {
+        case 0: // North green
+            digitalWrite(NORTH_GREEN, HIGH);
+            digitalWrite(NORTH_YELLOW, LOW);
+            digitalWrite(NORTH_RED, LOW);
+            break;
+        // ... more states
+    }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">🔍</div>
+                                    <h3>Debugging dan Monitoring State Machine</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>Debugging Techniques</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Serial Logging</span> - Print state changes ke Serial Monitor</li>
+                                                <li><span class="status-active">LED Indicators</span> - LED untuk menunjukkan state</li>
+                                                <li><span class="status-active">State Validation</span> - Validasi state yang valid</li>
+                                                <li><span class="status-active">Timing Verification</span> - Verifikasi durasi state</li>
+                                                <li><span class="status-active">Transition Testing</span> - Test transisi antar state</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Monitoring Features</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">MQTT Publishing</span> - Kirim state ke cloud</li>
+                                                <li><span class="status-active">Web Dashboard</span> - Monitor state via web</li>
+                                                <li><span class="status-active">State History</span> - Riwayat perubahan state</li>
+                                                <li><span class="status-active">Performance Metrics</span> - Metrik performa state machine</li>
+                                                <li><span class="status-active">Error Logging</span> - Log error dan exception</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="emergency-notice">
+                                        <div class="notice-icon">💡</div>
+                                        <div class="notice-content">
+                                            <h4>Best Practices State Machine</h4>
+                                            <p><strong>1. State Validation:</strong> Selalu validasi state sebelum transisi<br>
+                                            <strong>2. Timeout Handling:</strong> Implementasi timeout untuk mencegah hang<br>
+                                            <strong>3. Error Recovery:</strong> Mekanisme recovery dari error state<br>
+                                            <strong>4. State Persistence:</strong> Simpan state untuk recovery setelah restart<br>
+                                            <strong>5. Documentation:</strong> Dokumentasi lengkap setiap state dan transisi</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Hardware & Electronics Section -->
+        <section id="hardware-electronics" class="section">
+            <div class="section-header">
+                <h2 class="section-title">🔌 Hardware & Elektronik</h2>
+                <p class="section-subtitle">Komponen hardware, desain sirkuit, dan pertimbangan elektronik untuk sistem lampu lalu lintas IoT</p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <h3>Desain Sirkuit & Diagram Koneksi</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Desain sirkuit yang tepat sangat penting untuk memastikan sistem lampu lalu lintas berfungsi dengan aman dan efisien. Diagram koneksi yang jelas membantu dalam perakitan dan troubleshooting.
+                    </p>
+                    
+                    <div class="component-overview">
+                        <div class="component-grid">
+                            <div class="component-card">
+                                <div class="component-icon">🔧</div>
+                                <h4>Komponen Utama</h4>
+                                <ul class="feature-list">
+                                    <li><span class="status-active">ESP32 Development Board</span> - Mikrokontroler utama</li>
+                                    <li><span class="status-active">12x LED Traffic Lights</span> - Simulasi lampu lalu lintas</li>
+                                    <li><span class="status-active">12x Resistor 220Ω</span> - Pembatas arus untuk LED</li>
+                                    <li><span class="status-active">2x Push Button</span> - Kontrol darurat dan pejalan kaki</li>
+                                    <li><span class="status-active">Breadboard</span> - Platform prototyping</li>
+                                    <li><span class="status-active">Jumper Wires</span> - Koneksi antar komponen</li>
+                                </ul>
+                            </div>
+                            <div class="component-card">
+                                <div class="component-icon">🔌</div>
+                                <h4>Diagram Koneksi</h4>
+                                <ul class="feature-list">
+                                    <li><span class="status-active">LED ke GPIO</span> - Koneksi langsung dengan resistor</li>
+                                    <li><span class="status-active">Button ke GPIO</span> - Pull-up resistor internal</li>
+                                    <li><span class="status-active">Power Supply</span> - 3.3V dari ESP32</li>
+                                    <li><span class="status-active">Ground Connection</span> - GND terhubung ke semua komponen</li>
+                                    <li><span class="status-active">WiFi Antenna</span> - Built-in pada ESP32</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                                        <div class="circuit-diagram-section">
+                        <h4>🟢 Koneksi LED Traffic Lights</h4>
+                        <div class="led-connection-grid">
+                            <div class="direction-card">
+                                <div class="direction-header">
+                                    <span class="direction-icon">⬆️</span>
+                                    <h5>Utara (North)</h5>
+                                </div>
+                                <div class="led-connection-table">
+                                    <div class="led-row">
+                                        <span class="led-color green">🟢</span>
+                                        <span class="gpio-pin">GPIO 23</span>
+                                        <span class="led-label">Hijau</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color yellow">🟡</span>
+                                        <span class="gpio-pin">GPIO 22</span>
+                                        <span class="led-label">Kuning</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color red">🔴</span>
+                                        <span class="gpio-pin">GPIO 21</span>
+                                        <span class="led-label">Merah</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="direction-card">
+                                <div class="direction-header">
+                                    <span class="direction-icon">➡️</span>
+                                    <h5>Timur (East)</h5>
+                                </div>
+                                <div class="led-connection-table">
+                                    <div class="led-row">
+                                        <span class="led-color green">🟢</span>
+                                        <span class="gpio-pin">GPIO 19</span>
+                                        <span class="led-label">Hijau</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color yellow">🟡</span>
+                                        <span class="gpio-pin">GPIO 18</span>
+                                        <span class="led-label">Kuning</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color red">🔴</span>
+                                        <span class="gpio-pin">GPIO 5</span>
+                                        <span class="led-label">Merah</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="direction-card">
+                                <div class="direction-header">
+                                    <span class="direction-icon">⬇️</span>
+                                    <h5>Selatan (South)</h5>
+                                </div>
+                                <div class="led-connection-table">
+                                    <div class="led-row">
+                                        <span class="led-color green">🟢</span>
+                                        <span class="gpio-pin">GPIO 4</span>
+                                        <span class="led-label">Hijau</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color yellow">🟡</span>
+                                        <span class="gpio-pin">GPIO 2</span>
+                                        <span class="led-label">Kuning</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color red">🔴</span>
+                                        <span class="gpio-pin">GPIO 15</span>
+                                        <span class="led-label">Merah</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="direction-card">
+                                <div class="direction-header">
+                                    <span class="direction-icon">⬅️</span>
+                                    <h5>Barat (West)</h5>
+                                </div>
+                                <div class="led-connection-table">
+                                    <div class="led-row">
+                                        <span class="led-color green">🟢</span>
+                                        <span class="gpio-pin">GPIO 0</span>
+                                        <span class="led-label">Hijau</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color yellow">🟡</span>
+                                        <span class="gpio-pin">GPIO 16</span>
+                                        <span class="led-label">Kuning</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                    <div class="led-row">
+                                        <span class="led-color red">🔴</span>
+                                        <span class="gpio-pin">GPIO 17</span>
+                                        <span class="led-label">Merah</span>
+                                        <span class="connection-info">220Ω → LED</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                
+                                <div class="button-connections">
+                                    <h5>🔘 Koneksi Push Button</h5>
+                                    <div class="pin-list">
+                                        <div class="pin-item">
+                                            <span class="pin-number">GPIO 13</span>
+                                            <span class="pin-label">Emergency Button</span>
+                                            <span class="pin-connection">→ Pull-up internal → GND</span>
+                                        </div>
+                                        <div class="pin-item">
+                                            <span class="pin-number">GPIO 14</span>
+                                            <span class="pin-label">Pedestrian Button</span>
+                                            <span class="pin-connection">→ Pull-up internal → GND</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔧</div>
+                    <h3>Spesifikasi Komponen Detail</h3>
+                </div>
+                <div class="card-content">
+                    <div class="component-specs">
+                        <div class="spec-section">
+                            <h4>⚡ ESP32 Development Board</h4>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">Processor</span>
+                                    <span class="spec-value">Dual-core 240MHz</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Memory</span>
+                                    <span class="spec-value">520KB SRAM, 4MB Flash</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Voltage</span>
+                                    <span class="spec-value">3.3V Operating</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">GPIO</span>
+                                    <span class="spec-value">34 Programmable Pins</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">WiFi</span>
+                                    <span class="spec-value">802.11 b/g/n</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Bluetooth</span>
+                                    <span class="spec-value">4.2 BLE</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="spec-section">
+                            <h4>💡 LED Traffic Lights</h4>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">Type</span>
+                                    <span class="spec-value">5mm Standard LED</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Forward Voltage</span>
+                                    <span class="spec-value">2.0V (Red), 2.1V (Yellow), 3.2V (Green)</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Forward Current</span>
+                                    <span class="spec-value">20mA typical</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Brightness</span>
+                                    <span class="spec-value">2-4 candela</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Viewing Angle</span>
+                                    <span class="spec-value">30-60 degrees</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Lifetime</span>
+                                    <span class="spec-value">50,000 hours</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="spec-section">
+                            <h4>🔌 Resistor & Koneksi</h4>
+                            <div class="spec-grid">
+                                <div class="spec-item">
+                                    <span class="spec-label">Resistor Value</span>
+                                    <span class="spec-value">220Ω ±5%</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Power Rating</span>
+                                    <span class="spec-value">1/4W</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Wire Type</span>
+                                    <span class="spec-value">22 AWG Jumper Wires</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Breadboard</span>
+                                    <span class="spec-value">830 Point Solderless</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Button Type</span>
+                                    <span class="spec-value">6x6mm Tactile Switch</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Contact Rating</span>
+                                    <span class="spec-value">50mA @ 12V</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <h3>Manajemen Daya & Kebutuhan Listrik</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Analisis kebutuhan daya yang akurat penting untuk memastikan sistem beroperasi dengan stabil dan efisien. ESP32 dan komponen pendukung memiliki karakteristik daya yang spesifik.
+                    </p>
+                    
+                    <div class="power-analysis">
+                        <div class="power-section">
+                            <h4>📊 Analisis Konsumsi Daya</h4>
+                            <div class="power-grid">
+                                <div class="power-item">
+                                    <span class="power-label">ESP32 (Idle)</span>
+                                    <span class="power-value">25mA @ 3.3V</span>
+                                    <span class="power-power">82.5mW</span>
+                                </div>
+                                <div class="power-item">
+                                    <span class="power-label">ESP32 (WiFi Active)</span>
+                                    <span class="power-value">150mA @ 3.3V</span>
+                                    <span class="power-power">495mW</span>
+                                </div>
+                                <div class="power-item">
+                                    <span class="power-label">LED Traffic Light (Per LED)</span>
+                                    <span class="power-value">20mA @ 3.3V</span>
+                                    <span class="power-power">66mW</span>
+                                </div>
+                                <div class="power-item">
+                                    <span class="power-label">Total LED (12 LED)</span>
+                                    <span class="power-value">240mA @ 3.3V</span>
+                                    <span class="power-power">792mW</span>
+                                </div>
+                                <div class="power-item">
+                                    <span class="power-label">Push Button</span>
+                                    <span class="power-value">Negligible</span>
+                                    <span class="power-power">~0mW</span>
+                                </div>
+                                <div class="power-item">
+                                    <span class="power-label">Total System (Max)</span>
+                                    <span class="power-value">390mA @ 3.3V</span>
+                                    <span class="power-power">1.287W</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="power-section">
+                            <h4>🔋 Sumber Daya & Rekomendasi</h4>
+                            <div class="power-recommendations">
+                                <div class="recommendation-item">
+                                    <h5>USB Power Supply</h5>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Voltage</span> - 5V DC (USB standard)</li>
+                                        <li><span class="status-active">Current</span> - Minimum 500mA (1A recommended)</li>
+                                        <li><span class="status-active">Regulation</span> - Linear atau switching regulator</li>
+                                        <li><span class="status-active">Protection</span> - Overcurrent dan overvoltage protection</li>
+                                    </ul>
+                                </div>
+                                <div class="recommendation-item">
+                                    <h5>Battery Power (Optional)</h5>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Type</span> - LiPo 3.7V atau Li-ion</li>
+                                        <li><span class="status-active">Capacity</span> - 2000mAh minimum</li>
+                                        <li><span class="status-active">Charging</span> - USB charging circuit</li>
+                                        <li><span class="status-active">Protection</span> - Battery protection module</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-notice">
+                        <div class="notice-icon">⚠️</div>
+                        <div class="notice-content">
+                            <h4>Pertimbangan Keamanan Daya</h4>
+                            <p><strong>1. Voltage Regulation:</strong> Pastikan power supply stabil pada 3.3V<br>
+                            <strong>2. Current Rating:</strong> Gunakan power supply dengan rating minimal 500mA<br>
+                            <strong>3. Heat Dissipation:</strong> LED menghasilkan panas, pastikan ventilasi cukup<br>
+                            <strong>4. Fuse Protection:</strong> Pertimbangkan fuse untuk proteksi sirkuit<br>
+                            <strong>5. Ground Connection:</strong> Pastikan ground terhubung dengan benar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🛡️</div>
+                    <h3>Keamanan & Proteksi Sirkuit</h3>
+                </div>
+                <div class="card-content">
+                    <div class="safety-features">
+                        <div class="safety-section">
+                            <h4>🔌 Proteksi Listrik</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Resistor Current Limiting</span> - 220Ω untuk membatasi arus LED</li>
+                                <li><span class="status-active">Reverse Polarity Protection</span> - Dioda untuk mencegah kerusakan</li>
+                                <li><span class="status-active">Voltage Regulation</span> - Regulator 3.3V untuk stabilitas</li>
+                                <li><span class="status-active">ESD Protection</span> - Dioda Zener untuk proteksi ESD</li>
+                                <li><span class="status-active">Fuse Protection</span> - Fuse untuk proteksi overload</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="safety-section">
+                            <h4>🌡️ Manajemen Panas</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">LED Heat Dissipation</span> - Pastikan LED tidak terlalu panas</li>
+                                <li><span class="status-active">ESP32 Cooling</span> - Ventilasi untuk ESP32</li>
+                                <li><span class="status-active">Ambient Temperature</span> - Operasi pada 0-70°C</li>
+                                <li><span class="status-active">Thermal Management</span> - Heat sink jika diperlukan</li>
+                                <li><span class="status-active">Enclosure Design</span> - Casing dengan ventilasi</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="safety-section">
+                            <h4>🔒 Keamanan Operasional</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Emergency Stop</span> - Button untuk stop darurat</li>
+                                <li><span class="status-active">Fail-Safe Mode</span> - Mode aman saat error</li>
+                                <li><span class="status-active">Watchdog Timer</span> - Reset otomatis jika hang</li>
+                                <li><span class="status-active">State Validation</span> - Validasi state yang valid</li>
+                                <li><span class="status-active">Error Recovery</span> - Mekanisme recovery dari error</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🌍</div>
+                    <h3>Faktor Lingkungan & Ketahanan</h3>
+                </div>
+                <div class="card-content">
+                    <div class="environmental-factors">
+                        <div class="env-section">
+                            <h4>🌡️ Kondisi Lingkungan</h4>
+                            <div class="env-grid">
+                                <div class="env-item">
+                                    <span class="env-label">Temperature Range</span>
+                                    <span class="env-value">0°C - 70°C</span>
+                                    <span class="env-note">Operasi normal</span>
+                                </div>
+                                <div class="env-item">
+                                    <span class="env-label">Humidity</span>
+                                    <span class="env-value">10% - 90% RH</span>
+                                    <span class="env-note">Non-condensing</span>
+                                </div>
+                                <div class="env-item">
+                                    <span class="env-label">Altitude</span>
+                                    <span class="env-value">0 - 2000m</span>
+                                    <span class="env-note">Above sea level</span>
+                                </div>
+                                <div class="env-item">
+                                    <span class="env-label">Vibration</span>
+                                    <span class="env-value">Minimal</span>
+                                    <span class="env-note">Indoor use</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="env-section">
+                            <h4>🛡️ Proteksi Lingkungan</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Dust Protection</span> - Enclosure dengan filter udara</li>
+                                <li><span class="status-active">Moisture Protection</span> - Sealing untuk mencegah kondensasi</li>
+                                <li><span class="status-active">UV Protection</span> - Material tahan UV untuk outdoor</li>
+                                <li><span class="status-active">Impact Resistance</span> - Casing tahan benturan</li>
+                                <li><span class="status-active">Chemical Resistance</span> - Tahan terhadap bahan kimia</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="env-section">
+                            <h4>🔧 Rekomendasi Enclosure</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Material</span> - ABS atau polycarbonate</li>
+                                <li><span class="status-active">Size</span> - 200x150x80mm minimum</li>
+                                <li><span class="status-active">Mounting</span> - Wall mount atau pole mount</li>
+                                <li><span class="status-active">Access</span> - Removable cover untuk maintenance</li>
+                                <li><span class="status-active">Ventilation</span> - Vent holes untuk sirkulasi udara</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">📡</div>
+                    <h3>Pertimbangan EMI/EMC</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Electromagnetic Interference (EMI) dan Electromagnetic Compatibility (EMC) penting untuk memastikan sistem tidak mengganggu perangkat lain dan tidak terpengaruh oleh interferensi eksternal.
+                    </p>
+                    
+                    <div class="emi-considerations">
+                        <div class="emi-section">
+                            <h4>🛡️ Proteksi EMI</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Shielding</span> - Metal enclosure untuk shielding</li>
+                                <li><span class="status-active">Filtering</span> - Low-pass filter untuk noise</li>
+                                <li><span class="status-active">Grounding</span> - Ground yang proper</li>
+                                <li><span class="status-active">Cable Management</span> - Kabel yang terorganisir</li>
+                                <li><span class="status-active">Component Placement</span> - Penempatan komponen yang tepat</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="emi-section">
+                            <h4>📊 Standar EMC</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">FCC Part 15</span> - Standar Amerika untuk EMI</li>
+                                <li><span class="status-active">CE Marking</span> - Standar Eropa untuk EMC</li>
+                                <li><span class="status-active">IEC 61000</span> - Standar internasional EMC</li>
+                                <li><span class="status-active">EN 55032</span> - Standar EMC untuk multimedia</li>
+                                <li><span class="status-active">Local Regulations</span> - Peraturan lokal yang berlaku</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="emi-section">
+                            <h4>🔧 Praktik Terbaik</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Short Wires</span> - Kabel sesingkat mungkin</li>
+                                <li><span class="status-active">Twisted Pairs</span> - Kabel twisted untuk signal</li>
+                                <li><span class="status-active">Ferrite Beads</span> - Ferrite bead untuk filtering</li>
+                                <li><span class="status-active">Decoupling Caps</span> - Capacitor decoupling</li>
+                                <li><span class="status-active">Layout Design</span> - PCB layout yang optimal</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">🔧</div>
+                    <h3>Pertimbangan PCB & Produksi</h3>
+                </div>
+                <div class="card-content">
+                    <p class="text-content">
+                        Untuk produksi massal atau implementasi yang lebih permanen, desain PCB (Printed Circuit Board) menjadi penting untuk mengurangi ukuran, meningkatkan keandalan, dan menurunkan biaya.
+                    </p>
+                    
+                    <div class="pcb-considerations">
+                        <div class="pcb-section">
+                            <h4>📐 Desain PCB</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Layer Count</span> - 2-layer untuk kompleksitas rendah</li>
+                                <li><span class="status-active">Board Size</span> - 100x80mm untuk compact design</li>
+                                <li><span class="status-active">Component Placement</span> - Optimal untuk thermal management</li>
+                                <li><span class="status-active">Trace Width</span> - 0.5mm untuk signal, 1mm untuk power</li>
+                                <li><span class="status-active">Via Design</span> - 0.8mm diameter untuk routing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pcb-section">
+                            <h4>🔌 Connector & Interface</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Power Connector</span> - 2.1mm barrel jack atau USB-C</li>
+                                <li><span class="status-active">Programming Header</span> - 6-pin programming connector</li>
+                                <li><span class="status-active">LED Connector</span> - 12-pin header untuk LED</li>
+                                <li><span class="status-active">Button Connector</span> - 2-pin header untuk button</li>
+                                <li><span class="status-active">Antenna Design</span> - PCB antenna atau external antenna</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="pcb-section">
+                            <h4>🏭 Produksi & Assembly</h4>
+                            <ul class="feature-list">
+                                <li><span class="status-active">Component Sourcing</span> - Komponen yang mudah didapat</li>
+                                <li><span class="status-active">Assembly Method</span> - SMT untuk produksi massal</li>
+                                <li><span class="status-active">Testing Points</span> - Test point untuk debugging</li>
+                                <li><span class="status-active">Silkscreen</span> - Label yang jelas untuk assembly</li>
+                                <li><span class="status-active">Fiducial Marks</span> - Mark untuk alignment SMT</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="emergency-notice">
+                        <div class="notice-icon">💡</div>
+                        <div class="notice-content">
+                            <h4>Rekomendasi untuk Prototyping vs Produksi</h4>
+                            <p><strong>Prototyping:</strong> Gunakan breadboard untuk testing cepat dan iterasi desain<br>
+                            <strong>Small Scale:</strong> PCB custom dengan komponen through-hole<br>
+                            <strong>Mass Production:</strong> PCB SMT dengan komponen surface mount<br>
+                            <strong>Cost Optimization:</strong> Pilih komponen berdasarkan volume dan availability</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         
         <!-- Technical Section -->
@@ -941,6 +1755,182 @@
                         <div class="notice-content">
                             <h4>Fitur IoT Perempatan 4 Arah</h4>
                             <p>Sistem IoT perempatan 4 arah memiliki <strong>20 states lengkap</strong> dengan fitur save state, mode darurat 20 detik (kuning berkedip), mode pejalan kaki 15 detik, dan monitoring real-time melalui Adafruit IO. Timing yang realistis: 20s hijau utama, 10s hijau individual, 3s kuning, 2s transisi merah.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced State Machine Analysis -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🔬</div>
+                            <h3>Analisis Lanjutan State Machine</h3>
+                        </div>
+                        <div class="card-content">
+                            <p class="text-content">
+                                State machine dalam sistem lampu lalu lintas dirancang dengan mempertimbangkan <strong>keamanan, efisiensi, dan skalabilitas</strong>. Setiap state memiliki karakteristik unik yang mempengaruhi aliran lalu lintas dan pengalaman pengguna.
+                            </p>
+                            
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <h4>State Transition Matrix</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Normal Flow</span> - Transisi berurutan 0→1→2→3...</li>
+                                        <li><span class="status-active">Emergency Override</span> - Transisi langsung ke state 8</li>
+                                        <li><span class="status-active">Pedestrian Mode</span> - Transisi ke state 16-19</li>
+                                        <li><span class="status-active">Save State</span> - Resume dari state terakhir</li>
+                                        <li><span class="status-active">Error Recovery</span> - Reset ke state 0</li>
+                                    </ul>
+                                </div>
+                                <div class="info-item">
+                                    <h4>State Timing Optimization</h4>
+                                    <ul class="feature-list">
+                                        <li><span class="status-active">Peak Hours</span> - Durasi hijau lebih lama (25-30s)</li>
+                                        <li><span class="status-active">Off-peak Hours</span> - Durasi hijau standar (15-20s)</li>
+                                        <li><span class="status-active">Night Mode</span> - Kuning berkedip (state 8-11)</li>
+                                        <li><span class="status-active">Pedestrian Priority</span> - Hijau pejalan kaki (15s)</li>
+                                        <li><span class="status-active">Emergency Response</span> - Override semua state</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">📈</div>
+                                    <h3>Performance Metrics State Machine</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>Timing Accuracy</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">State Duration</span> - ±0.1 detik akurasi</li>
+                                                <li><span class="status-active">Transition Time</span> - < 50ms untuk transisi</li>
+                                                <li><span class="status-active">Response Time</span> - < 100ms untuk button press</li>
+                                                <li><span class="status-active">Sync Accuracy</span> - ±0.5 detik antar sistem</li>
+                                                <li><span class="status-active">Drift Compensation</span> - Koreksi drift waktu</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Reliability Metrics</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Uptime</span> - >99.9% availability</li>
+                                                <li><span class="status-active">Error Rate</span> - <0.1% state errors</li>
+                                                <li><span class="status-active">Recovery Time</span> - <5 detik dari error</li>
+                                                <li><span class="status-active">Memory Usage</span> - <2KB untuk state machine</li>
+                                                <li><span class="status-active">CPU Load</span> - <5% untuk state processing</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">🔄</div>
+                                    <h3>State Machine Synchronization</h3>
+                                </div>
+                                <div class="card-content">
+                                    <p class="text-content">
+                                        Dalam sistem multi-intersection, <strong>synchronization antar state machine</strong> menjadi kritis untuk memastikan aliran lalu lintas yang koordinatif dan efisien.
+                                    </p>
+                                    
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>Synchronization Methods</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Time-based Sync</span> - Sync berdasarkan waktu global</li>
+                                                <li><span class="status-active">Master-Slave</span> - Satu master mengontrol slave</li>
+                                                <li><span class="status-active">MQTT Coordination</span> - Koordinasi via MQTT messages</li>
+                                                <li><span class="status-active">GPS Time Sync</span> - Sync menggunakan GPS time</li>
+                                                <li><span class="status-active">NTP Server</span> - Network time protocol</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Coordination Features</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Green Wave</span> - Koordinasi hijau berurutan</li>
+                                                <li><span class="status-active">Traffic Flow</span> - Optimasi berdasarkan arah</li>
+                                                <li><span class="status-active">Emergency Coordination</span> - Sync emergency mode</li>
+                                                <li><span class="status-active">Pedestrian Priority</span> - Koordinasi pejalan kaki</li>
+                                                <li><span class="status-active">Adaptive Timing</span> - Penyesuaian berdasarkan traffic</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-icon">🔧</div>
+                                    <h3>State Machine Implementation Patterns</h3>
+                                </div>
+                                <div class="card-content">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <h4>Design Patterns</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Switch-Case Pattern</span> - Implementasi sederhana</li>
+                                                <li><span class="status-active">Function Pointer Array</span> - Performa tinggi</li>
+                                                <li><span class="status-active">State Table</span> - Konfigurasi fleksibel</li>
+                                                <li><span class="status-active">Event-Driven</span> - Berbasis event</li>
+                                                <li><span class="status-active">Hierarchical States</span> - State bersarang</li>
+                                            </ul>
+                                        </div>
+                                        <div class="info-item">
+                                            <h4>Memory Management</h4>
+                                            <ul class="feature-list">
+                                                <li><span class="status-active">Static Allocation</span> - Memory tetap</li>
+                                                <li><span class="status-active">State Stack</span> - Stack untuk nested states</li>
+                                                <li><span class="status-active">Memory Pool</span> - Pool untuk state objects</li>
+                                                <li><span class="status-active">Garbage Collection</span> - Cleanup otomatis</li>
+                                                <li><span class="status-active">Memory Monitoring</span> - Track memory usage</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="code-example">
+                                        <h4>Advanced State Machine Implementation</h4>
+                                        <pre><code>// Function pointer array for state handlers
+typedef void (*StateHandler)();
+
+StateHandler stateHandlers[] = {
+    state0_handler, state1_handler, state2_handler,
+    state3_handler, state4_handler, state5_handler,
+    // ... more handlers
+};
+
+// State machine with function pointers
+void runStateMachine() {
+    if (currentState < sizeof(stateHandlers) / sizeof(StateHandler)) {
+        stateHandlers[currentState]();
+    }
+}
+
+// Example state handler
+void state0_handler() {
+    // North green, East red
+    setLEDs(NORTH_GREEN | EAST_RED | SOUTH_RED | WEST_RED);
+    
+    if (millis() - stateStartTime >= STATE_DURATIONS[0] * 1000) {
+        transitionToState(1);
+    }
+    
+    // Handle emergency override
+    if (digitalRead(EMERGENCY_BUTTON) == HIGH) {
+        transitionToState(8);
+    }
+}
+
+void transitionToState(int newState) {
+    // Validate state transition
+    if (isValidTransition(currentState, newState)) {
+        currentState = newState;
+        stateStartTime = millis();
+        publishStateChange(newState);
+    }
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
