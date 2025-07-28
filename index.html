@@ -378,6 +378,7 @@
                                     <ul class="feature-list">
                                         <li><span class="status-active">ESP32</span> - Mikrokontroler dengan sensor dan actuator</li>
                                         <li><span class="status-active">LED Traffic Lights</span> - Aktuator untuk kontrol lalu lintas</li>
+                                        <li><span class="status-active">Button Emergency</span> -  Kontrol darurat</li>
                                         <li><span class="status-active">WiFi Module</span> - Konektivitas jaringan</li>
                                     </ul>
                                 </div>
@@ -815,6 +816,11 @@
                         <p>Platform prototyping dan koneksi</p>
                     </div>
                     <div class="component-card">
+                        <div class="component-icon">🔘</div>
+                        <h4>2x Push Button</h4>
+                        <p>Kontrol darurat</p>
+                    </div>
+                    <div class="component-card">
                         <div class="component-icon">📡</div>
                         <h4>WiFi Module</h4>
                         <p>Konektivitas internet untuk komunikasi cloud</p>
@@ -841,6 +847,7 @@
                                 <li><span class="status-active">LED Traffic Lights</span> - Aktuator untuk sinyal</li>
                                 <li><span class="status-active">Power Supply</span> - Sumber daya sistem</li>
                                 <li><span class="status-active">Breadboard</span> - Platform prototyping</li>
+                                <li><span class="status-active">Push Button</span> - Kontrol darurat</li>
                             </ul>
                         </div>
                         <div class="info-item">
@@ -850,6 +857,7 @@
                                 <li><span class="status-active">MQTT Client</span> - Komunikasi real-time</li>
                                 <li><span class="status-active">WiFi Manager</span> - Manajemen koneksi</li>
                                 <li><span class="status-active">State Machine</span> - Logika kontrol lalu lintas</li>
+                                <li><span class="status-active">Web Server</span> - Web interface</li>
                             </ul>
                         </div>
                         <div class="info-item">
@@ -882,10 +890,10 @@
                     <p class="text-center">Pilih pola lalu lintas untuk melihat logika dan timing yang berbeda berdasarkan implementasi Arduino yang sebenarnya</p>
                     
                     <div class="pattern-selector">
-                        <button type="button" id="btn2Way" class="pattern-btn active">Jalan Lurus 2 Arah</button>
-                        <button type="button" id="btnYShape" class="pattern-btn">Pertigaan Y</button>
+                        <button type="button" id="btnYShape" class="pattern-btn active">Pertigaan Y</button>
                         <button type="button" id="btnTShape" class="pattern-btn">Pertigaan T</button>
-                        <button type="button" id="btn4Way" class="pattern-btn">Perempatan 4 Arah</button>
+                        <button type="button" id="btn2Way" class="pattern-btn">Perempatan 2 Set</button>
+                        <button type="button" id="btn4Way" class="pattern-btn">Perempatan 4 Set</button>
                     </div>
                     
                     <div class="logic-display">
